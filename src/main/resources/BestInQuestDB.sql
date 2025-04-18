@@ -1,246 +1,247 @@
-CREATE TABLE IF NOT EXISTS "Пользователи" (
+CREATE TABLE IF NOT EXISTS "Users" (
     id            serial    PRIMARY KEY,
-    имя           varchar(255) NOT NULL CHECK (length(имя) > 0),
+    name           varchar(255) NOT NULL CHECK (length(name) > 0),
     email         varchar(255) NOT NULL UNIQUE CHECK (email ~* '^[^@]+@[^@]+\.[^@]+$'),
-    пароль        varchar(255) NOT NULL CHECK (length(пароль) >= 8),
+    password        varchar(255) NOT NULL CHECK (length(password) >= 8),
     xp            bigint    NOT NULL CHECK (xp >= 0),
-    уровень       bigint    NOT NULL CHECK (уровень >= 0),
-    дата_регистрации     timestamptz NOT NULL,
-    дата_последнего_входа timestamptz NOT NULL
-        CHECK (дата_последнего_входа >= дата_регистрации),
+    level       bigint    NOT NULL CHECK (level >= 0),
+    registration_date     timestamptz NOT NULL,
+    last_online_date timestamptz NOT NULL
+        CHECK (last_online_date >= registration_date),
     streak        bigint    NOT NULL CHECK (streak >= 0)
 );
 
-CREATE TABLE IF NOT EXISTS "Проекты" (
+CREATE TABLE IF NOT EXISTS "Projects" (
     id                serial    PRIMARY KEY,
-    название          varchar(255) NOT NULL CHECK (length(название) > 0),
-    описание          varchar(255),
-    владелец          bigint    NOT NULL CHECK (владелец > 0),
-    статус            varchar(255) NOT NULL CHECK (length(статус) > 0),
-    дата_создания     timestamptz NOT NULL,
-    предметы_проекта  bigint    CHECK (предметы_проекта >= 0),
-    завершен          boolean   NOT NULL
+    name          varchar(255) NOT NULL CHECK (length(name) > 0),
+    description          varchar(255),
+    owner          bigint    NOT NULL CHECK (owner > 0),
+    status            varchar(255) NOT NULL CHECK (length(status) > 0),
+    creation_date     timestamptz NOT NULL,
+    project_items  bigint    CHECK (project_items >= 0),
+    done          boolean   NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "История_версий" (
+CREATE TABLE IF NOT EXISTS "Version_history" (
     id                          serial    PRIMARY KEY,
-    заголовок                   varchar(255) NOT NULL CHECK (length(заголовок) > 0),
-    описание                    varchar(255),
-    статус                      varchar(255) NOT NULL CHECK (length(статус) > 0),
-    приоритет                   varchar(255) NOT NULL CHECK (length(приоритет) > 0),
-    сложность                   bigint    NOT NULL CHECK (сложность >= 0),
-    автор                       bigint    NOT NULL CHECK (автор > 0),
-    исполнитель                 bigint    NOT NULL CHECK (исполнитель > 0),
-    дата_обновления             timestamptz NOT NULL,
-    бонус_за_быстрое_выполнение bigint    NOT NULL CHECK (бонус_за_быстрое_выполнение >= 0),
-    комбо                       boolean   NOT NULL,
-    награда_xp                  bigint    NOT NULL CHECK (награда_xp >= 0),
-    награда_валюта              bigint    NOT NULL CHECK (награда_валюта >= 0),
-    дедлайн                     date      CHECK (дедлайн >= CURRENT_DATE)
+    title                   varchar(255) NOT NULL CHECK (length(title) > 0),
+    description                    varchar(255),
+    status                      varchar(255) NOT NULL CHECK (length(status) > 0),
+    priority                   varchar(255) NOT NULL CHECK (length(priority) > 0),
+    difficulty                   bigint    NOT NULL CHECK (difficulty >= 0),
+    author                       bigint    NOT NULL CHECK (author > 0),
+    executor                 bigint    NOT NULL CHECK (executor > 0),
+    update_date             timestamptz NOT NULL,
+    fast_done_bonus bigint    NOT NULL CHECK (fast_done_bonus >= 0),
+    combo                       boolean   NOT NULL,
+    reward_xp                  bigint    NOT NULL CHECK (reward_xp >= 0),
+    reward_currency              bigint    NOT NULL CHECK (reward_currency >= 0),
+    deadline                     date      CHECK (deadline >= CURRENT_DATE),
+    linked_task_id            bigint    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "Кланы" (
+CREATE TABLE IF NOT EXISTS "Clans" (
     id            serial    PRIMARY KEY,
-    название      varchar(255) NOT NULL UNIQUE CHECK (length(название) > 0),
-    лидер         bigint    NOT NULL CHECK (лидер > 0),
-    дата_создания timestamptz NOT NULL,
-    рейтинг       bigint    NOT NULL CHECK (рейтинг >= 0),
-    проект        bigint    NOT NULL CHECK (проект > 0)
+    name      varchar(255) NOT NULL UNIQUE CHECK (length(name) > 0),
+    leader         bigint    NOT NULL CHECK (leader > 0),
+    creation_date timestamptz NOT NULL,
+    rating       bigint    NOT NULL CHECK (rating >= 0),
+    project        bigint    NOT NULL CHECK (project > 0)
 );
 
-CREATE TABLE IF NOT EXISTS "Кланы_Участники" (
+CREATE TABLE IF NOT EXISTS "Clans_Participants" (
     id              serial    PRIMARY KEY,
-    клан            bigint    NOT NULL CHECK (клан > 0),
-    пользователь    bigint    NOT NULL CHECK (пользователь > 0),
-    роль            varchar(255) NOT NULL CHECK (length(роль) > 0),
-    дата_вступления timestamptz NOT NULL,
-    UNIQUE (клан, пользователь)
+    clan            bigint    NOT NULL CHECK (clan > 0),
+    user_id    bigint    NOT NULL CHECK (user_id > 0),
+    role            varchar(255) NOT NULL CHECK (length(role) > 0),
+    joining_date timestamptz NOT NULL,
+    UNIQUE (clan, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS "PvP_Соревнования" (
+CREATE TABLE IF NOT EXISTS "PvP_Competitions" (
     id              serial    PRIMARY KEY,
-    игрок_1         bigint    NOT NULL CHECK (игрок_1 > 0),
-    игрок_2         bigint    NOT NULL CHECK (игрок_2 > 0 AND игрок_2 <> игрок_1),
-    статус          varchar(255) NOT NULL CHECK (length(статус) > 0),
-    победитель      bigint    NOT NULL CHECK (победитель IN (игрок_1, игрок_2)),
-    награда_xp      bigint    NOT NULL CHECK (награда_xp >= 0),
-    награда_валюта  bigint    NOT NULL CHECK (награда_валюта >= 0),
-    дата_начала     timestamptz NOT NULL,
-    дата_окончания  timestamptz NOT NULL CHECK (дата_окончания >= дата_начала)
+    player_1         bigint    NOT NULL CHECK (player_1 > 0),
+    player_2         bigint    NOT NULL CHECK (player_2 > 0 AND player_2 <> player_1),
+    status          varchar(255) NOT NULL CHECK (length(status) > 0),
+    winner      bigint    NOT NULL CHECK (winner IN (player_1, player_2)),
+    reward_xp      bigint    NOT NULL CHECK (reward_xp >= 0),
+    reward_currency  bigint    NOT NULL CHECK (reward_currency >= 0),
+    start_date     timestamptz NOT NULL,
+    end_date  timestamptz NOT NULL CHECK (end_date >= start_date)
 );
 
-CREATE TABLE IF NOT EXISTS "Предметы" (
+CREATE TABLE IF NOT EXISTS "Items" (
     id            serial    PRIMARY KEY,
-    название      varchar(255) NOT NULL UNIQUE CHECK (length(название) > 0),
-    описание      varchar(255),
-    редкость      varchar(255) NOT NULL CHECK (length(редкость) > 0),
-    эффект_xp     bigint    NOT NULL CHECK (эффект_xp >= 0),
-    эффект_валюта bigint    NOT NULL CHECK (эффект_валюта >= 0),
-    длительность  varchar(255) NOT NULL CHECK (length(длительность) > 0),
-    стоимость     bigint    NOT NULL CHECK (стоимость >= 0)
+    name      varchar(255) NOT NULL UNIQUE CHECK (length(name) > 0),
+    description      varchar(255),
+    rarity      varchar(255) NOT NULL CHECK (length(rarity) > 0),
+    xp_multiplier     bigint    NOT NULL CHECK (xp_multiplier >= 0),
+    currency_multiplier bigint    NOT NULL CHECK (currency_multiplier >= 0),
+    duration  varchar(255) NOT NULL CHECK (length(duration) > 0),
+    cost     bigint    NOT NULL CHECK (cost >= 0)
 );
 
-CREATE TABLE IF NOT EXISTS "Пользователи_Инвентарь" (
+CREATE TABLE IF NOT EXISTS "Users_Inventory" (
     id             serial    PRIMARY KEY,
-    пользователь   bigint    NOT NULL CHECK (пользователь > 0),
-    предмет        bigint    NOT NULL CHECK (предмет > 0),
-    количество     bigint    NOT NULL CHECK (количество >= 0),
-    дата_получения timestamptz NOT NULL,
-    UNIQUE (пользователь, предмет)
+    user_id   bigint    NOT NULL CHECK (user_id > 0),
+    item        bigint    NOT NULL CHECK (item > 0),
+    amount     bigint    NOT NULL CHECK (amount >= 0),
+    acquire_date timestamptz NOT NULL,
+    UNIQUE (user_id, item)
 );
 
-CREATE TABLE IF NOT EXISTS "Магазин" (
+CREATE TABLE IF NOT EXISTS "Shop" (
     id            serial    PRIMARY KEY,
-    предмет       bigint    NOT NULL CHECK (предмет > 0),
-    цена          bigint    NOT NULL CHECK (цена >= 0),
-    доступность   varchar(255) NOT NULL CHECK (length(доступность) > 0),
-    UNIQUE (предмет)
+    item       bigint    NOT NULL CHECK (item > 0),
+    cost          bigint    NOT NULL CHECK (cost >= 0),
+    availability   varchar(255) NOT NULL CHECK (length(availability) > 0),
+    UNIQUE (item)
 );
 
-CREATE TABLE IF NOT EXISTS "Участники_проекта" (
+CREATE TABLE IF NOT EXISTS "Projects_participants" (
     id             serial    PRIMARY KEY,
-    проект         bigint    NOT NULL CHECK (проект > 0),
-    пользователь   bigint    NOT NULL CHECK (пользователь > 0),
-    роль           varchar(255) NOT NULL CHECK (length(роль) > 0),
-    дата_добавления timestamptz NOT NULL,
-    UNIQUE (проект, пользователь)
+    project         bigint    NOT NULL CHECK (project > 0),
+    user_id   bigint    NOT NULL CHECK (user_id > 0),
+    role           varchar(255) NOT NULL CHECK (length(role) > 0),
+    update_date timestamptz NOT NULL,
+    UNIQUE (project, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS "Указатель_на_задачу" (
+CREATE TABLE IF NOT EXISTS "Tasks_pointers" (
     id             serial    PRIMARY KEY,
-    задача         bigint    NOT NULL CHECK (задача > 0),
-    проект         bigint    NOT NULL CHECK (проект > 0),
-    дата_создания  timestamptz NOT NULL,
-    UNIQUE (задача, проект)
+    task         bigint    NOT NULL CHECK (task > 0),
+    project         bigint    NOT NULL CHECK (project > 0),
+    creation_date  timestamptz NOT NULL,
+    UNIQUE (task, project)
 );
 
-CREATE TABLE IF NOT EXISTS "Комментарии" (
+CREATE TABLE IF NOT EXISTS "Commentaries" (
     id             serial    PRIMARY KEY,
-    задача         bigint    NOT NULL CHECK (задача > 0),
-    пользователь   bigint    NOT NULL CHECK (пользователь > 0),
-    текст          varchar(255) NOT NULL CHECK (length(текст) > 0),
-    дата_создания  timestamptz NOT NULL
+    task         bigint    NOT NULL CHECK (task > 0),
+    user_id   bigint    NOT NULL CHECK (user_id > 0),
+    text          varchar(255) NOT NULL CHECK (length(text) > 0),
+    creation_date  timestamptz NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "Сферы" (
+CREATE TABLE IF NOT EXISTS "Spheres" (
     id       serial    PRIMARY KEY,
-    название varchar(255) NOT NULL CHECK (length(название) > 0),
-    проект   bigint    NOT NULL CHECK (проект > 0)
+    name varchar(255) NOT NULL CHECK (length(name) > 0),
+    project   bigint    NOT NULL CHECK (project > 0)
 );
 
-CREATE TABLE IF NOT EXISTS "Задачи_Сферы" (
-    задача bigint NOT NULL CHECK (задача > 0),
-    сфера  bigint NOT NULL CHECK (сфера > 0),
-    PRIMARY KEY (задача, сфера)
+CREATE TABLE IF NOT EXISTS "Tasks_Spheres" (
+    task bigint NOT NULL CHECK (task > 0),
+    sphere  bigint NOT NULL CHECK (sphere > 0),
+    PRIMARY KEY (task, sphere)
 );
 
-CREATE TABLE IF NOT EXISTS "Достижения" (
+CREATE TABLE IF NOT EXISTS "Achievements" (
     id            serial    PRIMARY KEY,
-    название      varchar(255) NOT NULL UNIQUE CHECK (length(название) > 0),
-    описание      varchar(255) NOT NULL CHECK (length(описание) > 0),
-    требуемый_xp  bigint    NOT NULL CHECK (требуемый_xp >= 0),
-    значок        varchar(255) NOT NULL CHECK (length(значок) > 0)
+    name      varchar(255) NOT NULL UNIQUE CHECK (length(name) > 0),
+    description      varchar(255) NOT NULL CHECK (length(description) > 0),
+    required_xp  bigint    NOT NULL CHECK (required_xp >= 0),
+    icon        varchar(255) NOT NULL CHECK (length(icon) > 0)
 );
 
-CREATE TABLE IF NOT EXISTS "Пользователи_Достижения" (
+CREATE TABLE IF NOT EXISTS "Users_Achievements" (
     id               serial    PRIMARY KEY,
-    пользователь     bigint    NOT NULL CHECK (пользователь > 0),
-    достижение       bigint    NOT NULL CHECK (достижение > 0),
-    дата_получения   timestamptz NOT NULL,
-    UNIQUE (пользователь, достижение)
+    user_id     bigint    NOT NULL CHECK (user_id > 0),
+    achievement       bigint    NOT NULL CHECK (achievement > 0),
+    acquire_date   timestamptz NOT NULL,
+    UNIQUE (user_id, achievement)
 );
 
-CREATE TABLE IF NOT EXISTS "Доходы" (
+CREATE TABLE IF NOT EXISTS "Income" (
     id            serial    PRIMARY KEY,
-    пользователь  bigint    NOT NULL CHECK (пользователь > 0),
-    количество    bigint    NOT NULL CHECK (количество >= 0),
-    дата          timestamptz NOT NULL,
-    описание      varchar(255)
+    user_id  bigint    NOT NULL CHECK (user_id > 0),
+    amount    bigint    NOT NULL CHECK (amount >= 0),
+    date          timestamptz NOT NULL,
+    description      varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS "Расходы" (
+CREATE TABLE IF NOT EXISTS "Spendings" (
     id            serial    PRIMARY KEY,
-    пользователь  bigint    NOT NULL CHECK (пользователь > 0),
-    количество    bigint    NOT NULL CHECK (количество >= 0),
-    дата          timestamptz NOT NULL,
-    описание      varchar(255)
+    user_id  bigint    NOT NULL CHECK (user_id > 0),
+    amount    bigint    NOT NULL CHECK (amount >= 0),
+    date          timestamptz NOT NULL,
+    description      varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS "Команды" (
+CREATE TABLE IF NOT EXISTS "Teams" (
     id          serial    PRIMARY KEY,
-    id_проекта  bigint    NOT NULL CHECK (id_проекта > 0),
-    название    varchar(255) NOT NULL CHECK (length(название) > 0),
-    описание    varchar(255)
+    project_id  bigint    NOT NULL CHECK (project_id > 0),
+    name    varchar(255) NOT NULL CHECK (length(name) > 0),
+    description    varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS "Участники_команды" (
+CREATE TABLE IF NOT EXISTS "Teams_Participants" (
     id               serial    PRIMARY KEY,
-    команда          bigint    NOT NULL CHECK (команда > 0),
-    пользователь     bigint    NOT NULL CHECK (пользователь > 0),
-    дата_добавления  timestamptz NOT NULL,
-    UNIQUE (команда, пользователь)
+    team          bigint    NOT NULL CHECK (team > 0),
+    user_id     bigint    NOT NULL CHECK (user_id > 0),
+    update_date  timestamptz NOT NULL,
+    UNIQUE (team, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS "Предметы_проекта" (
+CREATE TABLE IF NOT EXISTS "Project_items" (
     id        serial    PRIMARY KEY,
-    проект    bigint    NOT NULL CHECK (проект > 0),
-    предмет   bigint    NOT NULL CHECK (предмет > 0),
-    UNIQUE (проект, предмет)
+    project    bigint    NOT NULL CHECK (project > 0),
+    item   bigint    NOT NULL CHECK (item > 0),
+    UNIQUE (project, item)
 );
 
-CREATE TABLE IF NOT EXISTS "Получение_xp" (
+CREATE TABLE IF NOT EXISTS "Xp_gains" (
     id            serial    PRIMARY KEY,
-    количество    bigint    NOT NULL CHECK (количество >= 0),
-    дата          timestamptz NOT NULL,
-    пользователь  bigint    NOT NULL CHECK (пользователь > 0)
+    amount    bigint    NOT NULL CHECK (amount >= 0),
+    date          timestamptz NOT NULL,
+    user_id  bigint    NOT NULL CHECK (user_id > 0)
 );
 
 
 
-ALTER TABLE "Проекты" ADD CONSTRAINT "Проекты_fk3" FOREIGN KEY ("владелец") REFERENCES "Пользователи"("id");
-ALTER TABLE "История_версий" ADD CONSTRAINT "История_версий_fk6" FOREIGN KEY ("автор") REFERENCES "Пользователи"("id");
+ALTER TABLE "Projects" ADD CONSTRAINT "project_fk3" FOREIGN KEY ("owner") REFERENCES "Users"("id");
+ALTER TABLE "Version_history" ADD CONSTRAINT "Version_history_fk6" FOREIGN KEY ("author") REFERENCES "Users"("id");
 
-ALTER TABLE "История_версий" ADD CONSTRAINT "История_версий_fk7" FOREIGN KEY ("исполнитель") REFERENCES "Пользователи"("id");
-ALTER TABLE "Кланы" ADD CONSTRAINT "Кланы_fk2" FOREIGN KEY ("лидер") REFERENCES "Пользователи"("id");
+ALTER TABLE "Version_history" ADD CONSTRAINT "Version_history_fk7" FOREIGN KEY ("executor") REFERENCES "Users"("id");
+ALTER TABLE "Clans" ADD CONSTRAINT "Clans_fk2" FOREIGN KEY ("leader") REFERENCES "Users"("id");
 
-ALTER TABLE "Кланы" ADD CONSTRAINT "Кланы_fk5" FOREIGN KEY ("проект") REFERENCES "Проекты"("id");
-ALTER TABLE "Кланы_Участники" ADD CONSTRAINT "Кланы_Участники_fk1" FOREIGN KEY ("клан") REFERENCES "Кланы"("id");
+ALTER TABLE "Clans" ADD CONSTRAINT "Clans_fk5" FOREIGN KEY ("project") REFERENCES "Projects"("id");
+ALTER TABLE "Clans_Participants" ADD CONSTRAINT "Clans_Participants_fk1" FOREIGN KEY ("clan") REFERENCES "Clans"("id");
 
-ALTER TABLE "Кланы_Участники" ADD CONSTRAINT "Кланы_Участники_fk2" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
-ALTER TABLE "PvP_Соревнования" ADD CONSTRAINT "PvP_Соревнования_fk1" FOREIGN KEY ("игрок_1") REFERENCES "Пользователи"("id");
+ALTER TABLE "Clans_Participants" ADD CONSTRAINT "Clans_Participants_fk2" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "PvP_Competitions" ADD CONSTRAINT "PvP_Competitions_fk1" FOREIGN KEY ("player_1") REFERENCES "Users"("id");
 
-ALTER TABLE "PvP_Соревнования" ADD CONSTRAINT "PvP_Соревнования_fk2" FOREIGN KEY ("игрок_2") REFERENCES "Пользователи"("id");
+ALTER TABLE "PvP_Competitions" ADD CONSTRAINT "PvP_Competitions_fk2" FOREIGN KEY ("player_2") REFERENCES "Users"("id");
 
-ALTER TABLE "PvP_Соревнования" ADD CONSTRAINT "PvP_Соревнования_fk4" FOREIGN KEY ("победитель") REFERENCES "Пользователи"("id");
+ALTER TABLE "PvP_Competitions" ADD CONSTRAINT "PvP_Competitions_fk4" FOREIGN KEY ("winner") REFERENCES "Users"("id");
 
-ALTER TABLE "Пользователи_Инвентарь" ADD CONSTRAINT "Пользователи_Инвентарь_fk1" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
+ALTER TABLE "Users_Inventory" ADD CONSTRAINT "Users_Inventory_fk1" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
 
-ALTER TABLE "Пользователи_Инвентарь" ADD CONSTRAINT "Пользователи_Инвентарь_fk2" FOREIGN KEY ("предмет") REFERENCES "Предметы"("id");
-ALTER TABLE "Магазин" ADD CONSTRAINT "Магазин_fk1" FOREIGN KEY ("предмет") REFERENCES "Предметы"("id");
-ALTER TABLE "Участники_проекта" ADD CONSTRAINT "Участники_проекта_fk1" FOREIGN KEY ("проект") REFERENCES "Проекты"("id");
+ALTER TABLE "Users_Inventory" ADD CONSTRAINT "Users_Inventory_fk2" FOREIGN KEY ("item") REFERENCES "Items"("id");
+ALTER TABLE "Shop" ADD CONSTRAINT "Shop_fk1" FOREIGN KEY ("item") REFERENCES "Items"("id");
+ALTER TABLE "Projects_participants" ADD CONSTRAINT "Projects_participants_fk1" FOREIGN KEY ("project") REFERENCES "Projects"("id");
 
-ALTER TABLE "Участники_проекта" ADD CONSTRAINT "Участники_проекта_fk2" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
-ALTER TABLE "Указатель_на_задачу" ADD CONSTRAINT "Указатель_на_задачу_fk1" FOREIGN KEY ("задача") REFERENCES "История_версий"("id");
+ALTER TABLE "Projects_participants" ADD CONSTRAINT "Projects_participants_fk2" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "Tasks_pointers" ADD CONSTRAINT "Tasks_pointers_fk1" FOREIGN KEY ("task") REFERENCES "Version_history"("id");
 
-ALTER TABLE "Указатель_на_задачу" ADD CONSTRAINT "Указатель_на_задачу_fk2" FOREIGN KEY ("проект") REFERENCES "Проекты"("id");
-ALTER TABLE "Комментарии" ADD CONSTRAINT "Комментарии_fk1" FOREIGN KEY ("задача") REFERENCES "Указатель_на_задачу"("id");
+ALTER TABLE "Tasks_pointers" ADD CONSTRAINT "Tasks_pointers_fk2" FOREIGN KEY ("project") REFERENCES "Projects"("id");
+ALTER TABLE "Commentaries" ADD CONSTRAINT "Commentaries_fk1" FOREIGN KEY ("task") REFERENCES "Tasks_pointers"("id");
 
-ALTER TABLE "Комментарии" ADD CONSTRAINT "Комментарии_fk2" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
-ALTER TABLE "Сферы" ADD CONSTRAINT "Сферы_fk2" FOREIGN KEY ("проект") REFERENCES "Проекты"("id");
-ALTER TABLE "Задачи_Сферы" ADD CONSTRAINT "Задачи_Сферы_fk0" FOREIGN KEY ("задача") REFERENCES "История_версий"("id");
+ALTER TABLE "Commentaries" ADD CONSTRAINT "Commentaries_fk2" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "Spheres" ADD CONSTRAINT "Spheres_fk2" FOREIGN KEY ("project") REFERENCES "Projects"("id");
+ALTER TABLE "Tasks_Spheres" ADD CONSTRAINT "Tasks_Spheres_fk0" FOREIGN KEY ("task") REFERENCES "Version_history"("id");
 
-ALTER TABLE "Задачи_Сферы" ADD CONSTRAINT "Задачи_Сферы_fk1" FOREIGN KEY ("сфера") REFERENCES "Сферы"("id");
+ALTER TABLE "Tasks_Spheres" ADD CONSTRAINT "Tasks_Spheres_fk1" FOREIGN KEY ("sphere") REFERENCES "Spheres"("id");
 
-ALTER TABLE "Пользователи_Достижения" ADD CONSTRAINT "Пользователи_Достижения_fk1" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
+ALTER TABLE "Users_Achievements" ADD CONSTRAINT "Users_Achievements_fk1" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
 
-ALTER TABLE "Пользователи_Достижения" ADD CONSTRAINT "Пользователи_Достижения_fk2" FOREIGN KEY ("достижение") REFERENCES "Достижения"("id");
-ALTER TABLE "Доходы" ADD CONSTRAINT "Доходы_fk1" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
-ALTER TABLE "Расходы" ADD CONSTRAINT "Расходы_fk1" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
-ALTER TABLE "Команды" ADD CONSTRAINT "Команды_fk1" FOREIGN KEY ("id_проекта") REFERENCES "Проекты"("id");
-ALTER TABLE "Участники_команды" ADD CONSTRAINT "Участники_команды_fk1" FOREIGN KEY ("команда") REFERENCES "Команды"("id");
+ALTER TABLE "Users_Achievements" ADD CONSTRAINT "Users_Achievements_fk2" FOREIGN KEY ("achievement") REFERENCES "Achievements"("id");
+ALTER TABLE "Income" ADD CONSTRAINT "Income_fk1" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "Spendings" ADD CONSTRAINT "Spendings_fk1" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "Teams" ADD CONSTRAINT "Teams_fk1" FOREIGN KEY ("project_id") REFERENCES "Projects"("id");
+ALTER TABLE "Teams_Participants" ADD CONSTRAINT "Teams_Participants_fk1" FOREIGN KEY ("team") REFERENCES "Teams"("id");
 
-ALTER TABLE "Участники_команды" ADD CONSTRAINT "Участники_команды_fk2" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
-ALTER TABLE "Предметы_проекта" ADD CONSTRAINT "Предметы_проекта_fk1" FOREIGN KEY ("проект") REFERENCES "Проекты"("id");
+ALTER TABLE "Teams_Participants" ADD CONSTRAINT "Teams_Participants_fk2" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "Project_items" ADD CONSTRAINT "Project_items_fk1" FOREIGN KEY ("project") REFERENCES "Projects"("id");
 
-ALTER TABLE "Предметы_проекта" ADD CONSTRAINT "Предметы_проекта_fk2" FOREIGN KEY ("предмет") REFERENCES "Предметы"("id");
-ALTER TABLE "Получение_xp" ADD CONSTRAINT "Получение_xp_fk3" FOREIGN KEY ("пользователь") REFERENCES "Пользователи"("id");
+ALTER TABLE "Project_items" ADD CONSTRAINT "Project_items_fk2" FOREIGN KEY ("item") REFERENCES "Items"("id");
+ALTER TABLE "Xp_gains" ADD CONSTRAINT "Xp_gains_fk3" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
