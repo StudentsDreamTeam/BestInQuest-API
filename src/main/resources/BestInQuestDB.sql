@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS version_history (
     combo                       boolean   NOT NULL,
     reward_xp                  bigint    NOT NULL CHECK (reward_xp >= 0),
     reward_currency              bigint    NOT NULL CHECK (reward_currency >= 0),
-    deadline                     date      CHECK (deadline >= CURRENT_DATE),
+    deadline                     timestamptz      CHECK (deadline >= CURRENT_DATE),
     linked_task_id            bigint    NOT NULL
 );
 
