@@ -16,13 +16,13 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public User getUserProfile(@PathVariable Long id) {
-        return userService.getUserProfile(id);
+    public UserDTO getUserProfile(@PathVariable Long id) {
+        return UserDTO.fromORM(userService.getUserProfile(id));
     }
 
     @GetMapping("/all")
-    public List<User> getAll() {
-        return userService.getAll();
+    public List<UserDTO> getAll() {
+        return userService.getAll().stream().map(UserDTO::fromORM).toList();
     }
 
     @PostMapping("/wrong-add")
