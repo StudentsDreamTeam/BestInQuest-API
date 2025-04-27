@@ -19,8 +19,8 @@ public class TaskService {
     private UserRepository userRepository;
 
     public List<Task> getTasksByUser(Long userId) {
-//        return taskRepository.findByUserId(userId);
-        return List.of();
+        return taskRepository.findByUserId(userId);
+//        return List.of();
     }
 
     @Transactional
@@ -46,4 +46,8 @@ public class TaskService {
 
         taskRepository.delete(task);
     }
+
+    public Task createTask(Integer userId, Task task) {
+        return taskRepository.save(task);
+         }
 }
