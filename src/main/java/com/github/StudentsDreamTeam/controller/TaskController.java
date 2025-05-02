@@ -16,10 +16,12 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping("/create")
-    public  TaskDTO createTask(@RequestParam (value = "userID") Integer userId, @RequestBody TaskDTO task){
-        Task task1 = taskService.createTask(userId, Task.fromDTO(task));
+    public TaskDTO createTask(@RequestParam(value = "authorId") Long authorId,
+                              @RequestParam(value = "executorId") Long executorId,
+                              @RequestBody TaskDTO task) {
+        Task task1 = taskService.createTask(authorId, executorId, Task.fromDTO(task));
         TaskDTO taskDTO = TaskDTO.fromORM(task1);
-        return  taskDTO;
+        return taskDTO;
     }
 
     @GetMapping("/user/{userId}")
