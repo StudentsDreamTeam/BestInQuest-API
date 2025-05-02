@@ -20,10 +20,26 @@ public record TaskDTO (Integer id,
                        Boolean combo,
                        Integer rewardXp,
                        Integer rewardCurrency,
-                       LocalDateTime deadline){
+                       LocalDateTime deadline,
+                       Integer linkedTaskId) {
+
     public static TaskDTO fromORM(Task task) {
-        return new TaskDTO(task.getId(), task.getTitle(), task.getDescription(), task.getStatus(),
-                task.getPriority(), task.getDifficulty(), UserDTO.fromORM(task.getAuthor()), UserDTO.fromORM(task.getExecutor()), 
-                task.getUpdateDate(), task.getFastDoneBonus(), task.getCombo(), task.getRewardXp(), task.getRewardCurrency(), task.getDeadline());
+        return new TaskDTO(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getStatus(),
+                task.getPriority(),
+                task.getDifficulty(),
+                UserDTO.fromORM(task.getAuthor()),
+                UserDTO.fromORM(task.getExecutor()),
+                task.getUpdateDate(),
+                task.getFastDoneBonus(),
+                task.getCombo(),
+                task.getRewardXp(),
+                task.getRewardCurrency(),
+                task.getDeadline(),
+                task.getTaskPointer() != null ? task.getTaskPointer().getId() : null
+        );
     }
 }

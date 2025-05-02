@@ -12,10 +12,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Version_history")
 @Getter
 @Setter
+
 public class Task {
 
     @Id
@@ -64,27 +68,32 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deadline;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "linked_task_id")
     private TaskPointer taskPointer;
+
+    @OneToMany(mappedBy = "linkedTask", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TaskPointer> taskPointers = new ArrayList<>();
 
     public static Task fromDTO(TaskDTO taskDTO) {
         Task result = new Task();
         result.setTitle(taskDTO.title());
         result.setDescription(taskDTO.description());
-        result.setStatus(taskDTO.status());
-        result.setPriority(taskDTO.priority());
-        result.setDifficulty(taskDTO.difficulty());
+        result.setStatus(taskDTO.status() != null ? taskDTO.status() : "NEW");
+        result.setPriority(taskDTO.priority() != null ? taskDTO.priority() : "LOW");
+        result.setDifficulty(taskDTO.difficulty() != null ? taskDTO.difficulty() : 1L);
         result.setAuthor(User.fromDTO(taskDTO.author()));
         result.setExecutor(User.fromDTO(taskDTO.executor()));
         result.setUpdateDate(taskDTO.updateDate());
-        result.setFastDoneBonus(taskDTO.fastDoneBonus());
-        result.setCombo(taskDTO.combo());
-        result.setRewardXp(taskDTO.rewardXp());
-        result.setRewardCurrency(taskDTO.rewardCurrency());
+        result.setFastDoneBonus(taskDTO.fastDoneBonus() != null ? taskDTO.fastDoneBonus() : 0);
+        result.setCombo(taskDTO.combo() != null ? taskDTO.combo() : false);
+        result.setRewardXp(taskDTO.rewardXp() != null ? taskDTO.rewardXp() : 0);
+        result.setRewardCurrency(taskDTO.rewardCurrency() != null ? taskDTO.rewardCurrency() : 0);
         result.setDeadline(taskDTO.deadline());
+        if (taskDTO.linkedTaskId() != null) {
+            result.setTaskPointer(new TaskPointer(taskDTO.linkedTaskId()));
+        }
 
         return result;
     }
-
 }
