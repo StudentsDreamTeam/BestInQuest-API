@@ -1,7 +1,8 @@
-package com.github.StudentsDreamTeam;
+package com.github.StudentsDreamTeam.controller;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.github.StudentsDreamTeam.model.Greeting;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
