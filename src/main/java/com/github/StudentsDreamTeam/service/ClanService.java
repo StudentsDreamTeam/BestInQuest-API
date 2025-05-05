@@ -4,6 +4,7 @@ import com.github.StudentsDreamTeam.model.Clan;
 import com.github.StudentsDreamTeam.model.User;
 import com.github.StudentsDreamTeam.repository.ClanRepository;
 import com.github.StudentsDreamTeam.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +21,13 @@ public class ClanService {
     @Transactional
     public Clan createClan(Clan clan, Long userId) {
         User leader = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         clan.setLeader(leader);
         return clanRepository.save(clan);
     }
 
     public Clan getClanInfo(Long id) {
-        return clanRepository.findById(id).orElseThrow(() -> new RuntimeException("Clan not found"));
+        return clanRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Clan not found"));
     }
 }
