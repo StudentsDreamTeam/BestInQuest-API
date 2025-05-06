@@ -51,9 +51,10 @@ jobs:
             -Dsonar.projectKey=StudentsDreamTeam_BestInQuest-API
             -Dsonar.java.source=21
             -Dsonar.sources=src/main/java
-            # -Dsonar.tests=src/test/java
             -Dsonar.exclusions=**/generated/**,**/model/**
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
+
+      # -Dsonar.tests=src/test/java
 
   build-and-deploy:
     runs-on: ubuntu-latest
