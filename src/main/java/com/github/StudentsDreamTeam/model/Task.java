@@ -1,7 +1,5 @@
 package com.github.StudentsDreamTeam.model;
 
-import com.github.StudentsDreamTeam.dto.TaskDTO;
-import com.github.StudentsDreamTeam.dto.UserDTO;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -67,24 +65,5 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "linked_task_id")
     private TaskPointer taskPointer;
-
-    public static Task fromDTO(TaskDTO taskDTO) {
-        Task result = new Task();
-        result.setTitle(taskDTO.title());
-        result.setDescription(taskDTO.description());
-        result.setStatus(taskDTO.status());
-        result.setPriority(taskDTO.priority());
-        result.setDifficulty(taskDTO.difficulty());
-        result.setAuthor(User.fromDTO(taskDTO.author()));
-        result.setExecutor(User.fromDTO(taskDTO.executor()));
-        result.setUpdateDate(taskDTO.updateDate());
-        result.setFastDoneBonus(taskDTO.fastDoneBonus());
-        result.setCombo(taskDTO.combo());
-        result.setRewardXp(taskDTO.rewardXp());
-        result.setRewardCurrency(taskDTO.rewardCurrency());
-        result.setDeadline(taskDTO.deadline());
-
-        return result;
-    }
 
 }
