@@ -49,8 +49,6 @@ public class User {
     private List<Project> projects;
 
     public static User fromDTO(UserDTO userDTO) {
-        if (userDTO == null) return null;
-
         User user = new User();
         user.setName(userDTO.name());
         user.setXp(userDTO.xp());
@@ -63,4 +61,5 @@ public class User {
 
         return user;
     }
+
 }

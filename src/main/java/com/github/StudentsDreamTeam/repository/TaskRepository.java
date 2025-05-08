@@ -9,9 +9,6 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
-    @EntityGraph(attributePaths = {"author", "executor"})
-    List<Task> findByAuthorIdOrExecutorId(Long authorId, Long executorId);
-
-    List<Task> findByAuthorId(Long authorId);
-    List<Task> findByExecutorId(Long executorId);
+    @EntityGraph()
+    List<Task> findByUserId(Long userId);
 }

@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS projects_participants (
 
 CREATE TABLE IF NOT EXISTS tasks_pointers (
     id             serial    PRIMARY KEY,
-    task         bigint,
-    project         bigint,
+    task         bigint    NOT NULL CHECK (task > 0),
+    project         bigint    NOT NULL CHECK (project > 0),
     creation_date  timestamptz NOT NULL,
     UNIQUE (task, project)
 );
@@ -199,7 +199,6 @@ CREATE TABLE IF NOT EXISTS xp_gains (
 ALTER TABLE projects ADD CONSTRAINT project_fk3 FOREIGN KEY (owner) REFERENCES users(id);
 ALTER TABLE version_history ADD CONSTRAINT version_history_fk6 FOREIGN KEY (author) REFERENCES users(id);
 ALTER TABLE version_history ADD CONSTRAINT version_history_fk7 FOREIGN KEY (executor) REFERENCES users(id);
-ALTER TABLE version_history ADD CONSTRAINT version_history_fk8 FOREIGN KEY (linked_task_id) REFERENCES tasks_pointers(id);
 ALTER TABLE clans ADD CONSTRAINT clans_fk2 FOREIGN KEY (leader) REFERENCES users(id);
 ALTER TABLE clans ADD CONSTRAINT clans_fk5 FOREIGN KEY (project) REFERENCES projects(id);
 ALTER TABLE clans_participants ADD CONSTRAINT clans_participants_fk1 FOREIGN KEY (clan) REFERENCES clans(id);
