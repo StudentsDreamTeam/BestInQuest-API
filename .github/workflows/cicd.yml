@@ -75,12 +75,6 @@ jobs:
           java-version: 21
           distribution: 'temurin'
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver: docker-container  # Используем контейнерный драйвер
-          buildkitd-flags: --debug
-
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
