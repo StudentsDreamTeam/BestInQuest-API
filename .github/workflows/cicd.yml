@@ -91,3 +91,35 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
             ${{ env.DOCKER_IMAGE }}:${{ github.ref_name == 'main' && 'stable' || 'staging' }}
           push: true
+
+        
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted   
+    env:
+      DEPLOY_DIR: /opt/app  
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare deployment files
+        run: |
+          cp ./src/main/resources/BestInQuestDB.sql $DEPLOY_DIR/
+          cp docker-compose.yml $DEPLOY_DIR/
+          # Создаем .env файл из secrets (если не используется готовый)
+          echo "POSTGRES_USER=postgres" >> $DEPLOY_DIR/.env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $DEPLOY_DIR/.env
+          echo "POSTGRES_DB=app_db" >> $DEPLOY_DIR/.env
+
+      # 3. Развертывание приложения
+      - name: Deploy application
+        run: |
+          cd $DEPLOY_DIR
+          ocker pull ${{ secrets.DOCKER_HUB_USERNAME }}/api:latest
+          # Останавливаем старые контейнеры (если есть)
+          docker-compose down || true
+          
+          # Запускаем новые контейнеры
+          docker-compose up -d
+          
+          # Проверяем статус
+          docker-compose ps
