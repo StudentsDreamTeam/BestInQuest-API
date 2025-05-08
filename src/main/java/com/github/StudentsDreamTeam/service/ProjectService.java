@@ -3,7 +3,6 @@ package com.github.StudentsDreamTeam.service;
 import com.github.StudentsDreamTeam.model.Project;
 import com.github.StudentsDreamTeam.repository.ProjectRepository;
 import com.github.StudentsDreamTeam.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +24,11 @@ public class ProjectService {
 
     @Transactional
     public Project createProject(Project project, Long userId) {
-        project.setOwner(userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User designated to project owner does not exist.")));
+        project.setOwner(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not authorized")));
         return projectRepository.save(project);
     }
 
     public Project getProjectInfo(Long projectId) {
-        return projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Project not found"));
+        return projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
     }
 }

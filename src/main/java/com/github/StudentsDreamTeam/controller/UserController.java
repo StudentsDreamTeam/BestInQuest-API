@@ -29,6 +29,6 @@ public class UserController {
     public UserDTO testAdd(@RequestBody UserDTO userDTO) {
         User user = User.fromDTO(userDTO);
 
-        return UserDTO.fromORM(userService.registerUser(user));
+        return UserDTO.fromORM(userService.addUser(user));
     }
 }

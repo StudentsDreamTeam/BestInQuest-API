@@ -2,7 +2,6 @@ package com.github.StudentsDreamTeam.service;
 
 import com.github.StudentsDreamTeam.model.Achievement;
 import com.github.StudentsDreamTeam.repository.AchievementRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,6 @@ public class AchievementService {
     }
 
     public Achievement getAchievement(Long achievementId) {
-        return achievementRepository.findById(achievementId).orElseThrow(() -> new EntityNotFoundException("Achievement not found"));
+        return achievementRepository.findById(achievementId).orElseThrow(() -> new RuntimeException("Achievement not found"));
     }
 }
