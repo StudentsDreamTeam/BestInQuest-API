@@ -81,6 +81,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           driver: docker-container  # Используем контейнерный драйвер
+          buildkitd-flags: --debug
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
@@ -90,7 +91,6 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          load: true
           push: false
 
       - name: Login to Docker Hub
