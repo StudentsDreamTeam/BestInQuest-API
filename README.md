@@ -1,2 +1,1 @@
 # SemesterProject
-demo hello project
