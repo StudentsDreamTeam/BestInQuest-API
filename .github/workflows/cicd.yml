@@ -26,19 +26,6 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Save JAR for Docker
-        id: set-output
-        run: |
-          JAR_PATH=$(find target -name '*.jar' | head -n 1)
-          echo "JAR_PATH=${JAR_PATH}" >> $GITHUB_OUTPUT
-          echo "jar-ready=true" >> $GITHUB_OUTPUT
-
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-jar
-          path: ${{ steps.set-output.outputs.JAR_PATH }}
-
       - name: SonarCloud Scan
         if: success()
         uses: SonarSource/sonarqube-scan-action@v5.0.0
@@ -60,12 +47,6 @@ jobs:
     needs: analyze
     steps:
       - uses: actions/checkout@v4
-
-      - name: Download JAR artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: app-jar
-          path: target/  # Кладём JAR обратно в target/
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
