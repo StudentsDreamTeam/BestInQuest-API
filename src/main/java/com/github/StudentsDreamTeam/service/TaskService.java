@@ -76,8 +76,7 @@ public class TaskService {
 
         Task savedTask = taskRepository.save(task);
 
-        pointer = taskPointerRepository.save(pointer);
-        task.setTaskPointer(pointer);
+        taskPointerRepository.save(pointer);
 
         return savedTask;
     }

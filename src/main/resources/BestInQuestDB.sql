@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS version_history (
     reward_xp                  bigint    NOT NULL CHECK (reward_xp >= 0),
     reward_currency              bigint    NOT NULL CHECK (reward_currency >= 0),
     deadline                     timestamptz      CHECK (deadline >= CURRENT_DATE),
-    linked_task_id            bigint
+    linked_task_id            bigint    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS clans (
@@ -109,10 +109,9 @@ CREATE TABLE IF NOT EXISTS projects_participants (
 
 CREATE TABLE IF NOT EXISTS tasks_pointers (
     id             serial    PRIMARY KEY,
---    task         bigint,
+    task         bigint,
     project         bigint,
     creation_date  timestamptz NOT NULL,
-    linked_task_id integer,
     UNIQUE (task, project)
 );
 
@@ -213,7 +212,7 @@ ALTER TABLE users_inventory ADD CONSTRAINT users_inventory_fk2 FOREIGN KEY (item
 ALTER TABLE shop ADD CONSTRAINT shop_fk1 FOREIGN KEY (item) REFERENCES items(id);
 ALTER TABLE projects_participants ADD CONSTRAINT projects_participants_fk1 FOREIGN KEY (project) REFERENCES projects(id);
 ALTER TABLE projects_participants ADD CONSTRAINT projects_participants_fk2 FOREIGN KEY (user_id) REFERENCES users(id);
-ALTER TABLE tasks_pointers ADD CONSTRAINT tasks_pointers_fk1 FOREIGN KEY (linked_task_id) REFERENCES version_history(id);
+ALTER TABLE tasks_pointers ADD CONSTRAINT tasks_pointers_fk1 FOREIGN KEY (task) REFERENCES version_history(id);
 ALTER TABLE tasks_pointers ADD CONSTRAINT tasks_pointers_fk2 FOREIGN KEY (project) REFERENCES projects(id);
 ALTER TABLE commentaries ADD CONSTRAINT commentaries_fk1 FOREIGN KEY (task) REFERENCES tasks_pointers(id);
 ALTER TABLE commentaries ADD CONSTRAINT commentaries_fk2 FOREIGN KEY (user_id) REFERENCES users(id);
