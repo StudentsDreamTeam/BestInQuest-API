@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 env:
-  DOCKER_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/api
+  DOCKER_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/bestinquest-api
   MAVEN_OPTS: -Djava.security.egd=file:/dev/./urandom
 
 jobs:
