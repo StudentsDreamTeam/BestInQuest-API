@@ -21,7 +21,7 @@ services:
       postgres:
         condition: service_healthy  # Ждём, пока БД станет доступна
     ports:
-      - "15614:15614"
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
