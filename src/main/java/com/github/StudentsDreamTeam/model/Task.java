@@ -2,12 +2,16 @@ package com.github.StudentsDreamTeam.model;
 
 import com.github.StudentsDreamTeam.dto.TaskDTO;
 import com.github.StudentsDreamTeam.dto.UserDTO;
+import com.github.StudentsDreamTeam.enums.Difficulty;
+import com.github.StudentsDreamTeam.enums.Priority;
+import com.github.StudentsDreamTeam.enums.Status;
 import jakarta.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.DateTimeException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -32,14 +36,17 @@ public class Task {
     @Column(name = "description")
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private Status status;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "priority")
-    private String priority;
+    private Priority priority;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "difficulty")
-    private Long difficulty;
+    private Difficulty difficulty;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")
@@ -68,6 +75,12 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deadline;
 
+    @Column(name = "sphere")
+    private String sphere;
+
+    @Column(name = "duration")
+    private Long duration;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "linked_task_id")
     private TaskPointer taskPointer;
@@ -79,9 +92,24 @@ public class Task {
         Task result = new Task();
         result.setTitle(taskDTO.title());
         result.setDescription(taskDTO.description());
-        result.setStatus(taskDTO.status() != null ? taskDTO.status() : "NEW");
-        result.setPriority(taskDTO.priority() != null ? taskDTO.priority() : "LOW");
-        result.setDifficulty(taskDTO.difficulty() != null ? taskDTO.difficulty() : 1L);
+        result.setStatus(
+                taskDTO.status() != null
+                        ? Status.fromValue(taskDTO.status())
+                        : Status.NEW
+        );
+
+        result.setPriority(
+                taskDTO.priority() != null
+                        ? Priority.fromValue(taskDTO.priority())
+                        : Priority.LOW
+        );
+
+        result.setDifficulty(
+                taskDTO.difficulty() != null
+                        ? Difficulty.fromValue(taskDTO.difficulty())
+                        : Difficulty.ONE
+        );
+
         result.setAuthor(User.fromDTO(taskDTO.author()));
         result.setExecutor(User.fromDTO(taskDTO.executor()));
         result.setUpdateDate(taskDTO.updateDate());
@@ -90,6 +118,8 @@ public class Task {
         result.setRewardXp(taskDTO.rewardXp() != null ? taskDTO.rewardXp() : 0);
         result.setRewardCurrency(taskDTO.rewardCurrency() != null ? taskDTO.rewardCurrency() : 0);
         result.setDeadline(taskDTO.deadline());
+        result.setSphere(taskDTO.sphere());
+        result.setDuration(taskDTO.duration());
         if (taskDTO.linkedTaskId() != null) {
             result.setTaskPointer(new TaskPointer(taskDTO.linkedTaskId()));
         }

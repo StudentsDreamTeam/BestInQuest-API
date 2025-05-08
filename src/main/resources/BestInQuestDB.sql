@@ -37,7 +37,9 @@ CREATE TABLE IF NOT EXISTS version_history (
     reward_xp                  bigint    NOT NULL CHECK (reward_xp >= 0),
     reward_currency              bigint    NOT NULL CHECK (reward_currency >= 0),
     deadline                     timestamptz      CHECK (deadline >= CURRENT_DATE),
-    linked_task_id            bigint
+    linked_task_id            bigint,
+    sphere                      varchar(255),
+    duration                    varchar(255) NOT NULL CHECK (length(duration) > 0)
 );
 
 CREATE TABLE IF NOT EXISTS clans (

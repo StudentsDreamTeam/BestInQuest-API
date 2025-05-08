@@ -1,9 +1,6 @@
 package com.github.StudentsDreamTeam.dto;
 
 import com.github.StudentsDreamTeam.model.Task;
-import com.github.StudentsDreamTeam.model.TaskPointer;
-import com.github.StudentsDreamTeam.model.User;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +9,7 @@ public record TaskDTO (Integer id,
                        String description,
                        String status,
                        String priority,
-                       Long difficulty,
+                       Integer difficulty,
                        UserDTO author,
                        UserDTO executor,
                        LocalDateTime updateDate,
@@ -21,6 +18,8 @@ public record TaskDTO (Integer id,
                        Integer rewardXp,
                        Integer rewardCurrency,
                        LocalDateTime deadline,
+                       String sphere,
+                       Long duration,
                        Integer linkedTaskId) {
 
     public static TaskDTO fromORM(Task task) {
@@ -28,9 +27,9 @@ public record TaskDTO (Integer id,
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
-                task.getStatus(),
-                task.getPriority(),
-                task.getDifficulty(),
+                task.getStatus() != null ? task.getStatus().getValue() : null,
+                task.getPriority() != null ? task.getPriority().getValue() : null,
+                task.getDifficulty() != null ? task.getDifficulty().getLevel() : null,
                 UserDTO.fromORM(task.getAuthor()),
                 UserDTO.fromORM(task.getExecutor()),
                 task.getUpdateDate(),
@@ -39,6 +38,8 @@ public record TaskDTO (Integer id,
                 task.getRewardXp(),
                 task.getRewardCurrency(),
                 task.getDeadline(),
+                task.getSphere(),
+                task.getDuration(),
                 task.getTaskPointer() != null ? task.getTaskPointer().getId() : null
         );
     }
