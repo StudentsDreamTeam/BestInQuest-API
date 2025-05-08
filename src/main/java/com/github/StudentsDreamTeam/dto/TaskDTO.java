@@ -39,7 +39,7 @@ public record TaskDTO (Integer id,
                 task.getRewardCurrency(),
                 task.getDeadline(),
                 task.getSphere(),
-                task.getDuration(),
+                task.getDuration() != null ? task.getDuration().getSeconds() : null,
                 task.getTaskPointer() != null ? task.getTaskPointer().getId() : null
         );
     }

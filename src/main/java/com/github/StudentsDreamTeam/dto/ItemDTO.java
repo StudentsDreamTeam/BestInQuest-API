@@ -3,6 +3,8 @@ package com.github.StudentsDreamTeam.dto;
 import com.github.StudentsDreamTeam.model.Item;
 import com.github.StudentsDreamTeam.model.Task;
 
+import java.time.Duration;
+
 public record ItemDTO(
         Integer id,
         String name,
@@ -10,7 +12,7 @@ public record ItemDTO(
         String rarity,
         Long xpMultiplier,
         Long currencyMultiplier,
-        String duration,
+        Long duration,
         Long cost
 ) {
     public static ItemDTO fromORM(Item item) {
@@ -21,7 +23,7 @@ public record ItemDTO(
                 item.getRarity(),
                 item.getXpMultiplier(),
                 item.getCurrencyMultiplier(),
-                item.getDuration(),
+                item.getDuration() != null ? item.getDuration().getSeconds() : null,
                 item.getCost()
         );
     }

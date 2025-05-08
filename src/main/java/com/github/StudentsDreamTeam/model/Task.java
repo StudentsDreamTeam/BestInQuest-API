@@ -79,7 +79,7 @@ public class Task {
     private String sphere;
 
     @Column(name = "duration")
-    private Long duration;
+    private Duration duration;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "linked_task_id")
@@ -119,7 +119,11 @@ public class Task {
         result.setRewardCurrency(taskDTO.rewardCurrency() != null ? taskDTO.rewardCurrency() : 0);
         result.setDeadline(taskDTO.deadline());
         result.setSphere(taskDTO.sphere());
-        result.setDuration(taskDTO.duration());
+        result.setDuration(
+                taskDTO.duration() != null
+                        ? Duration.ofSeconds(taskDTO.duration())
+                        : null
+        );
         if (taskDTO.linkedTaskId() != null) {
             result.setTaskPointer(new TaskPointer(taskDTO.linkedTaskId()));
         }

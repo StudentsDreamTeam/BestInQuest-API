@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
+
 @Entity
 @Table(name = "items")
 @Data
@@ -34,8 +36,8 @@ public class Item {
     @Column(name = "currency_multiplier", nullable = false)
     private Long currencyMultiplier;
 
-    @Column(name = "duration", nullable = false)
-    private String duration;
+    @Column(name = "duration")
+    private Duration duration;
 
     @Column(name = "cost", nullable = false)
     private Long cost;
@@ -48,7 +50,11 @@ public class Item {
         item.setRarity(itemDTO.rarity());
         item.setXpMultiplier(itemDTO.xpMultiplier());
         item.setCurrencyMultiplier(itemDTO.currencyMultiplier());
-        item.setDuration(itemDTO.duration());
+        item.setDuration(
+                itemDTO.duration() != null
+                        ? Duration.ofSeconds(itemDTO.duration())
+                        : null
+        );
         item.setCost(itemDTO.cost());
         return item;
     }
