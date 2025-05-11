@@ -105,6 +105,7 @@ jobs:
         run: |
           cp ./src/main/resources/BestInQuestDB.sql $DEPLOY_DIR/
           cp docker-compose.yml $DEPLOY_DIR/
+          rm -f $DEPLOY_DIR/.env || true
           # Создаем .env файл из secrets (если не используется готовый)
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> $DEPLOY_DIR/.env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $DEPLOY_DIR/.env
