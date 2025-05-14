@@ -1,11 +1,11 @@
 package com.github.StudentsDreamTeam.enums;
 
 public enum Difficulty {
-    ZERO(0),
-    ONE(1),
-    TWO(2),
-    THREE(3),
-    FOUR(4);
+    VERY_EASY(0),
+    EASY(1),
+    NORMAL(2),
+    HARD(3),
+    VERY_HARD(4);
 
     private final int level;
 

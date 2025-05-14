@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS version_history (
     deadline                     timestamptz      CHECK (deadline >= CURRENT_DATE),
     linked_task_id            bigint,
     sphere                      varchar(255),
-    duration                    varchar(255) NOT NULL CHECK (length(duration) > 0)
+    duration                    numeric(21,0) NOT NULL CHECK (length(duration) > 0)
 );
 
 CREATE TABLE IF NOT EXISTS clans (
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS items (
     rarity      varchar(255) NOT NULL CHECK (length(rarity) > 0),
     xp_multiplier     bigint    NOT NULL CHECK (xp_multiplier >= 0),
     currency_multiplier bigint    NOT NULL CHECK (currency_multiplier >= 0),
-    duration  varchar(255) NOT NULL CHECK (length(duration) > 0),
+    duration  numeric(21,0) NOT NULL CHECK (length(duration) > 0),
     cost     bigint    NOT NULL CHECK (cost >= 0)
 );
 
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS tasks_pointers (
     project         bigint,
     creation_date  timestamptz NOT NULL,
     linked_task_id integer,
-    UNIQUE (task, project)
+    UNIQUE (linked_task_id, project)
 );
 
 CREATE TABLE IF NOT EXISTS commentaries (
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS project_items (
 
 CREATE TABLE IF NOT EXISTS xp_gains (
     id            serial    PRIMARY KEY,
-    amount    bigint    NOT NULL CHECK (amount >= 0),
+    amount    bigint    NOT NULL,
     date          timestamptz NOT NULL,
     user_id  bigint    NOT NULL CHECK (user_id > 0)
 );
@@ -232,3 +232,6 @@ ALTER TABLE teams_participants ADD CONSTRAINT teams_participants_fk2 FOREIGN KEY
 ALTER TABLE project_items ADD CONSTRAINT project_items_fk1 FOREIGN KEY (project) REFERENCES projects(id);
 ALTER TABLE project_items ADD CONSTRAINT project_items_fk2 FOREIGN KEY (item) REFERENCES items(id);
 ALTER TABLE xp_gains ADD CONSTRAINT xp_gains_fk3 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE version_history
+ADD COLUMN applied_xp_reward BIGINT DEFAULT 0,
+ADD COLUMN applied_currency_reward BIGINT DEFAULT 0;

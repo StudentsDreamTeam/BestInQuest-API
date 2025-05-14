@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Duration;
+import java.util.List;
 
 @Entity
 @Table(name = "items")
@@ -41,6 +42,12 @@ public class Item {
 
     @Column(name = "cost", nullable = false)
     private Long cost;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UsersInventory> usersInventory;
+
+//    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Shop shop;
 
     public static Item fromDTO(ItemDTO itemDTO) {
         Item item = new Item();

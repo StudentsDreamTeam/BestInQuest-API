@@ -74,6 +74,9 @@ public class TaskService {
                 (int) finalCurrency,
                 LocalDateTime.now(), "Task completed: " + existingTask.getTitle()
         ));
+
+        existingTask.setAppliedXpReward(finalXp);
+        existingTask.setAppliedCurrencyReward(finalCurrency);
     }
 
     private void revertTaskRewardWithBonuses(Task existingTask) {
@@ -88,14 +91,15 @@ public class TaskService {
             currencyMultiplier *= item.getItem().getCurrencyMultiplier();
         }
 
-        long baseXp = existingTask.getRewardXp();
-        long baseCurrency = existingTask.getRewardCurrency();
-
-        long finalXp = - baseXp * xpMultiplier;
-        long finalCurrency = baseCurrency * currencyMultiplier;
+        long finalXp = existingTask.getAppliedXpReward() != null
+                ? -existingTask.getAppliedXpReward()
+                : 0;
+        long finalCurrency = existingTask.getAppliedCurrencyReward() != null
+                ? existingTask.getAppliedCurrencyReward()
+                : 0;
 
         executor.setXp(Math.max(0, executor.getXp() + (int) finalXp));
-        executor.setLevel(Math.max(0, executor.getLevel() - existingTask.getRewardCurrency()));
+        executor.setLevel(Math.max(0, executor.getLevel() - (int) finalCurrency));
         userRepository.save(executor);
 
         xpGainsRepository.save(new XpGains(
@@ -107,8 +111,11 @@ public class TaskService {
         spendingsRepository.save(new Spendings(
                 executor,
                 (int) finalCurrency,
-                LocalDateTime.now(), "Task completed: " + existingTask.getTitle()
+                LocalDateTime.now(), "Task reverted: " + existingTask.getTitle()
         ));
+
+        existingTask.setAppliedXpReward(0L);
+        existingTask.setAppliedCurrencyReward(0L);
     }
 
     @Transactional
@@ -127,7 +134,7 @@ public class TaskService {
             Status oldStatus = existingTask.getStatus();
             Status newStatus = task.getStatus();
 
-            if (Status.DONE.equals(newStatus)) {
+            if (oldStatus != Status.DONE && Status.DONE.equals(newStatus)) {
                 applyTaskRewardWithBonuses(existingTask);
             }
 

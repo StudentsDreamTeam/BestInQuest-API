@@ -4,23 +4,27 @@ import com.github.StudentsDreamTeam.model.Task;
 
 import java.time.LocalDateTime;
 
-public record TaskDTO (Integer id,
-                       String title,
-                       String description,
-                       String status,
-                       String priority,
-                       Integer difficulty,
-                       UserDTO author,
-                       UserDTO executor,
-                       LocalDateTime updateDate,
-                       Integer fastDoneBonus,
-                       Boolean combo,
-                       Integer rewardXp,
-                       Integer rewardCurrency,
-                       LocalDateTime deadline,
-                       String sphere,
-                       Long duration,
-                       Integer linkedTaskId) {
+public record TaskDTO(
+        Integer id,
+        String title,
+        String description,
+        String status,
+        String priority,
+        Integer difficulty,
+        UserDTO author,
+        UserDTO executor,
+        LocalDateTime updateDate,
+        Integer fastDoneBonus,
+        Boolean combo,
+        Integer rewardXp,
+        Integer rewardCurrency,
+        LocalDateTime deadline,
+        String sphere,
+        Long duration,
+        Integer linkedTaskId,
+        Long appliedXpReward,
+        Long appliedCurrencyReward
+) {
 
     public static TaskDTO fromORM(Task task) {
         return new TaskDTO(
@@ -40,7 +44,9 @@ public record TaskDTO (Integer id,
                 task.getDeadline(),
                 task.getSphere(),
                 task.getDuration() != null ? task.getDuration().getSeconds() : null,
-                task.getTaskPointer() != null ? task.getTaskPointer().getId() : null
+                task.getTaskPointer() != null ? task.getTaskPointer().getId() : null,
+                task.getAppliedXpReward(),
+                task.getAppliedCurrencyReward()
         );
     }
 }

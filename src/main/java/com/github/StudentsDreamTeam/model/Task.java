@@ -88,6 +88,12 @@ public class Task {
     @OneToMany(mappedBy = "linkedTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskPointer> taskPointers = new ArrayList<>();
 
+    @Column(name = "applied_xp_reward")
+    private Long appliedXpReward;
+
+    @Column(name = "applied_currency_reward")
+    private Long appliedCurrencyReward;
+
     public static Task fromDTO(TaskDTO taskDTO) {
         Task result = new Task();
         result.setTitle(taskDTO.title());
@@ -107,7 +113,7 @@ public class Task {
         result.setDifficulty(
                 taskDTO.difficulty() != null
                         ? Difficulty.fromValue(taskDTO.difficulty())
-                        : Difficulty.ONE
+                        : Difficulty.EASY
         );
 
         result.setAuthor(User.fromDTO(taskDTO.author()));
@@ -127,6 +133,8 @@ public class Task {
         if (taskDTO.linkedTaskId() != null) {
             result.setTaskPointer(new TaskPointer(taskDTO.linkedTaskId()));
         }
+        result.setAppliedXpReward(taskDTO.appliedXpReward());
+        result.setAppliedCurrencyReward(taskDTO.appliedCurrencyReward());
 
         return result;
     }
