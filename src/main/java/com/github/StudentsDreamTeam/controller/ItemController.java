@@ -33,4 +33,9 @@ public class ItemController {
     public List<ItemDTO> getAll() {
         return itemService.getAll();
     }
+    
+    @GetMapping("/ping")
+    public String ping() {
+        return "OK";
+    }
 }
