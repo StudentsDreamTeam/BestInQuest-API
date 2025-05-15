@@ -2,9 +2,10 @@ services:
   postgres:
     image: postgres:17-alpine
     # env_file: .env
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: 561928
-    POSTGRES_DB: best_in_quest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 561928
+      POSTGRES_DB: best_in_quest
     ports:
       - "5432:5432"
     volumes:
