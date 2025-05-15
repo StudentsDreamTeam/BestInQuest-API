@@ -117,7 +117,7 @@ jobs:
         run: |
           cd $DEPLOY_DIR
           # Останавливаем старые контейнеры (если есть)
-          docker compose down || true
+          docker compose down -v || true
           
           # Запускаем новые контейнеры
           docker compose up -d
