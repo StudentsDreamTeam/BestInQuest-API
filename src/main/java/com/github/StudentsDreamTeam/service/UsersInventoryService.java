@@ -1,9 +1,11 @@
 package com.github.StudentsDreamTeam.service;
 
 import com.github.StudentsDreamTeam.dto.UsersInventoryDTO;
+import com.github.StudentsDreamTeam.model.Income;
 import com.github.StudentsDreamTeam.model.Item;
 import com.github.StudentsDreamTeam.model.User;
 import com.github.StudentsDreamTeam.model.UsersInventory;
+import com.github.StudentsDreamTeam.repository.IncomeRepository;
 import com.github.StudentsDreamTeam.repository.ItemRepository;
 import com.github.StudentsDreamTeam.repository.UserRepository;
 import com.github.StudentsDreamTeam.repository.UsersInventoryRepository;
@@ -30,6 +32,8 @@ public class UsersInventoryService {
     @Autowired
     private ItemRepository itemRepo;
 
+    @Autowired
+    private IncomeRepository incomeRepo;
 
     public List<UsersInventoryDTO> getAll() {
         return inventoryRepo.findAll().stream().map(UsersInventoryDTO::fromORM).toList();
@@ -55,6 +59,27 @@ public class UsersInventoryService {
     public void removeItemFromInventory(Integer userId, Integer itemId) {
         UsersInventory inventory = inventoryRepo.findByUserIdAndItemId(userId, itemId)
                 .orElseThrow(() -> new EntityNotFoundException("Item not found in user's inventory"));
+        inventoryRepo.delete(inventory);
+    }
+
+    @Transactional
+    public void sellItemFromInventory(Integer userId, Integer itemId) {
+        User user = userRepo.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        UsersInventory inventory = inventoryRepo.findByUserIdAndItemId(userId, itemId)
+                .orElseThrow(() -> new EntityNotFoundException("Item not found in user's inventory"));
+
+
+        Item item = inventory.getItem();
+        long salePrice = item.getCost() * item.getCurrencyMultiplier();
+
+        incomeRepo.save(new Income(
+                user,
+                (int) salePrice,
+                LocalDateTime.now(), "Item sold: " + item.getName()
+        ));
+
         inventoryRepo.delete(inventory);
     }
 
