@@ -2,7 +2,7 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'postgres')
 THEN
-    CREATE ROLE postgres WITH LOGIN PASSWORD 'karnaval' SUPERUSER;
+    CREATE ROLE postgres WITH LOGIN PASSWORD '561928' SUPERUSER;
     END IF;
 END
 $$;
