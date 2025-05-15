@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:17-alpine
-    env_file: .env
+    # env_file: .env
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: 561928
     POSTGRES_DB: best_in_quest
@@ -11,7 +11,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./BestInQuestDB.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      # test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d best_in_quest"]
       interval: 10s
       timeout: 10s
       retries: 10
