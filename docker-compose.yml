@@ -2,10 +2,6 @@ services:
   postgres:
     image: postgres:17-alpine
     env_file: .env
-    # environment:
-    #   POSTGRES_USER: postgres
-    #   POSTGRES_PASSWORD: 561928
-    #   POSTGRES_DB: best_in_quest
     ports:
       - "5432:5432"
     volumes:
@@ -13,17 +9,18 @@ services:
       - ./BestInQuestDB.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      # test: ["CMD-SHELL", "pg_isready -U postgres -d best_in_quest"]
       interval: 10s
       timeout: 10s
       retries: 10
       start_period: 60s
+    networks:
+      - app_network
 
   api:
     image: ${DOCKER_REGISTRY}/api:latest
     depends_on:
       postgres:
-        condition: service_healthy  # Ждём, пока БД станет доступна
+        condition: service_healthy 
     env_file: .env
     ports:
       - "15614:15614"
@@ -34,6 +31,37 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+    healthcheck:  
+      test: ["CMD", "curl", "-f", "http://localhost:15614/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+    networks:
+      - app_network
+
+  frontend:
+    image: ${DOCKER_REGISTRY}/frontend:latest
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file: .env
+    ports:
+      - "5173:5173"
+    environment:
+      - API_BASE_URL="http://api:15614"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app_network
 
 volumes:
   postgres_data:
+
+networks:
+  app_network:
+    external: true
