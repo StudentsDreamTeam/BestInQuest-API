@@ -34,14 +34,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      
-      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
-      MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"
-      MANAGEMENT_ENDPOINTS_WEB_BASE_PATH: "/actuator"
-      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
-      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "always"
     healthcheck:  
-      test: ["CMD", "curl", "-f", "http://localhost:15614/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:15614/ping"]
       interval: 10s
       timeout: 10s
       retries: 10
