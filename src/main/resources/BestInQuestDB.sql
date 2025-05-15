@@ -1,3 +1,12 @@
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'postgres')
+THEN
+    CREATE ROLE postgres WITH LOGIN PASSWORD '561928' SUPERUSER;
+    END IF;
+END
+$$;
+
 CREATE TABLE IF NOT EXISTS users (
     id            serial    PRIMARY KEY,
     name           varchar(255) NOT NULL CHECK (length(name) > 0),
