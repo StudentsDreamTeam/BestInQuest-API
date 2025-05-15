@@ -34,8 +34,8 @@ public class ItemController {
         return itemService.getAll();
     }
     
-    @GetMapping("/health")
-    public String health() {
+    @GetMapping("/ping")
+    public String ping() {
         return "OK";
     }
 }
