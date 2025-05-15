@@ -2,6 +2,9 @@ services:
   postgres:
     image: postgres:17-alpine
     env_file: .env
+    environment:
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US"
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
     ports:
       - "5432:5432"
     volumes:
@@ -36,7 +39,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-      start_period: 20s
+      start_period: 60s
     networks:
       - app_network
 
@@ -53,9 +56,10 @@ services:
       - API_BASE_URL="http://api:15614"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5173"]
-      interval: 30s
-      timeout: 5s
+      interval: 10s
+      timeout: 10s
       retries: 10
+      start_period: 60s
     networks:
       - app_network
 
