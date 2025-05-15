@@ -7,21 +7,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./BestInQuestDB.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./init-user.sh:/docker-entrypoint-initdb.d/init-user.sh
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 10s
       retries: 10
       start_period: 60s
-    entrypoint: |
-      sh -c '
-      chmod +x /docker-entrypoint-initdb.d/init-user.sh
-      /docker-entrypoint-initdb.d/init-user.sh
-      exec docker-entrypoint.sh postgres
-      '
 
   api:
     image: ${DOCKER_REGISTRY}/api:latest

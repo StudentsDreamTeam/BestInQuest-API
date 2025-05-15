@@ -112,29 +112,6 @@ jobs:
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> $DEPLOY_DIR/.env
           echo "DOCKER_REGISTRY=${{ secrets.DOCKER_HUB_USERNAME }}" >> $DEPLOY_DIR/.env
 
-          # Создаем скрипт инициализации пользователя
-          cat > $DEPLOY_DIR/init-user.sh << 'EOF'
-          #!/bin/sh
-          set -e
-          
-          # Ждем доступности PostgreSQL
-          until pg_isready -U postgres; do
-            sleep 1
-          done
-          
-          # Создаем пользователя если не существует
-          if ! psql -U postgres -tc "SELECT 1 FROM pg_roles WHERE rolname = '${POSTGRES_USER}'" | grep -q 1; then
-            psql -U postgres -c "CREATE ROLE ${POSTGRES_USER} WITH LOGIN PASSWORD '${POSTGRES_PASSWORD}' SUPERUSER"
-            echo "Created user ${POSTGRES_USER}"
-          fi
-          
-          # Восстанавливаем безопасную аутентификацию
-          sed -i 's/trust/md5/g' /var/lib/postgresql/data/pg_hba.conf
-          EOF
-          
-          # Делаем скрипт исполняемым
-          chmod +x $DEPLOY_DIR/init-user.sh
-
       # 3. Развертывание приложения
       - name: Deploy application
         run: |
