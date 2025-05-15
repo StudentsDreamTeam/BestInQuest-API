@@ -46,8 +46,8 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UsersInventory> usersInventory;
 
-//    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Shop shop;
+    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Shop shop;
 
     public static Item fromDTO(ItemDTO itemDTO) {
         Item item = new Item();
