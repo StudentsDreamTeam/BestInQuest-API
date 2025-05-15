@@ -1,6 +1,8 @@
 package com.github.StudentsDreamTeam.controller;
 
+import com.github.StudentsDreamTeam.dto.ItemDTO;
 import com.github.StudentsDreamTeam.dto.ShopDTO;
+import com.github.StudentsDreamTeam.service.ItemService;
 import com.github.StudentsDreamTeam.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,26 +18,25 @@ public class ShopController {
     private ShopService shopService;
 
     @GetMapping
-    public ResponseEntity<List<ShopDTO>> getAllItems() {
-        return ResponseEntity.ok(shopService.getAllShopItems());
+    public List<ShopDTO> getAllItems() {
+        return shopService.getAllShopItems();
     }
 
     @PostMapping
-    public ResponseEntity<ShopDTO> addToShop(@RequestBody ShopDTO dto) {
-        return ResponseEntity.ok(shopService.addToShop(dto));
+    public ShopDTO addToShop(@RequestBody ShopDTO dto) {
+        return shopService.addToShop(dto);
     }
 
     @DeleteMapping("/{itemId}")
-    public ResponseEntity<Void> removeFromShop(@PathVariable Integer itemId) {
+    public void removeFromShop(@PathVariable Integer itemId) {
         shopService.removeFromShop(itemId);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{itemId}/price")
-    public ResponseEntity<ShopDTO> updatePrice(
+    public ShopDTO updatePrice(
             @PathVariable Integer itemId,
             @RequestParam Long newCost
     ) {
-        return ResponseEntity.ok(shopService.updatePrice(itemId, newCost));
+        return shopService.updatePrice(itemId, newCost);
     }
 }

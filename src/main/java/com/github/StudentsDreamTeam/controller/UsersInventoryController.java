@@ -43,14 +43,12 @@ public class UsersInventoryController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UsersInventoryDTO>> getInventoryByUserId(@PathVariable Integer userId) {
-        List<UsersInventoryDTO> inventory = service.getInventoryByUserId(userId);
-        return ResponseEntity.ok(inventory);
+    public List<UsersInventoryDTO> getInventoryByUserId(@PathVariable Integer userId) {
+        return service.getInventoryByUserId(userId);
     }
 
     @DeleteMapping("/sell/{userId}/{itemId}")
-    public ResponseEntity<String> sellItem(@PathVariable Integer userId, @PathVariable Integer itemId) {
+    public void sellItem(@PathVariable Integer userId, @PathVariable Integer itemId) {
             service.sellItemFromInventory(userId, itemId);
-            return ResponseEntity.ok("Item sold successfully.");
     }
 }

@@ -70,9 +70,8 @@ public class UsersInventoryService {
         UsersInventory inventory = inventoryRepo.findByUserIdAndItemId(userId, itemId)
                 .orElseThrow(() -> new EntityNotFoundException("Item not found in user's inventory"));
 
-
         Item item = inventory.getItem();
-        long salePrice = item.getCost() * item.getCurrencyMultiplier();
+        long salePrice = item.getCost();
 
         incomeRepo.save(new Income(
                 user,
