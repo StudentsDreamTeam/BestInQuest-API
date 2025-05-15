@@ -21,9 +21,7 @@ public record TaskDTO(
         LocalDateTime deadline,
         String sphere,
         Long duration,
-        Integer linkedTaskId,
-        Long appliedXpReward,
-        Long appliedCurrencyReward
+        Integer linkedTaskId
 ) {
 
     public static TaskDTO fromORM(Task task) {
@@ -44,9 +42,7 @@ public record TaskDTO(
                 task.getDeadline(),
                 task.getSphere(),
                 task.getDuration() != null ? task.getDuration().getSeconds() : null,
-                task.getTaskPointer() != null ? task.getTaskPointer().getId() : null,
-                task.getAppliedXpReward(),
-                task.getAppliedCurrencyReward()
+                task.getTaskPointer() != null ? task.getTaskPointer().getId() : null
         );
     }
 }

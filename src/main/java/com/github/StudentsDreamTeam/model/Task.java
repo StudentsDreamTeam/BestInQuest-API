@@ -133,8 +133,6 @@ public class Task {
         if (taskDTO.linkedTaskId() != null) {
             result.setTaskPointer(new TaskPointer(taskDTO.linkedTaskId()));
         }
-        result.setAppliedXpReward(taskDTO.appliedXpReward());
-        result.setAppliedCurrencyReward(taskDTO.appliedCurrencyReward());
 
         return result;
     }

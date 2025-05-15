@@ -60,7 +60,6 @@ public class TaskService {
         long finalCurrency = baseCurrency * currencyMultiplier;
 
         executor.setXp(executor.getXp() + (int) finalXp);
-        executor.setLevel(executor.getLevel() + existingTask.getRewardCurrency());
         userRepository.save(executor);
 
         xpGainsRepository.save(new XpGains(
@@ -81,15 +80,6 @@ public class TaskService {
 
     private void revertTaskRewardWithBonuses(Task existingTask) {
         User executor = existingTask.getExecutor();
-        List<UsersInventory> inventory = usersInventoryRepository.findByUserId(executor.getId());
-
-        long xpMultiplier = 1;
-        long currencyMultiplier = 1;
-
-        for (UsersInventory item : inventory) {
-            xpMultiplier *= item.getItem().getXpMultiplier();
-            currencyMultiplier *= item.getItem().getCurrencyMultiplier();
-        }
 
         long finalXp = existingTask.getAppliedXpReward() != null
                 ? -existingTask.getAppliedXpReward()
@@ -99,7 +89,6 @@ public class TaskService {
                 : 0;
 
         executor.setXp(Math.max(0, executor.getXp() + (int) finalXp));
-        executor.setLevel(Math.max(0, executor.getLevel() - (int) finalCurrency));
         userRepository.save(executor);
 
         xpGainsRepository.save(new XpGains(
