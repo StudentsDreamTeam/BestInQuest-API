@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS version_history (
     deadline                     timestamptz      CHECK (deadline >= CURRENT_DATE),
     linked_task_id            bigint,
     sphere                      varchar(255),
-    duration                    numeric(21,0) NOT NULL CHECK (length(duration) > 0)
+    duration                    numeric(21,0) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS clans (
@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS items (
     description      varchar(255),
     rarity      varchar(255) NOT NULL CHECK (length(rarity) > 0),
     xp_multiplier     bigint    NOT NULL CHECK (xp_multiplier >= 0),
-    currency_multiplier bigint    NOT NULL CHECK (currency_multiplier >= 0),
-    duration  numeric(21,0) NOT NULL CHECK (length(duration) > 0),
+    currency_multiplier bigint    NOT NULL,
+    duration  numeric(21,0) NOT NULL,
     cost     bigint    NOT NULL CHECK (cost >= 0)
 );
 
