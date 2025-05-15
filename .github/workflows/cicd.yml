@@ -123,7 +123,11 @@ jobs:
         run: |
           cd $DEPLOY_DIR
           # Останавливаем старые контейнеры (если есть)
-          docker compose down -v || true
+          docker compose down -v || true 
+
+          docker network rm app_network || true
+
+          docker network create app_network || true
           
           # Запускаем новые контейнеры
           docker compose up -d
