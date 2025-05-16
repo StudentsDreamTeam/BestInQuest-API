@@ -37,7 +37,7 @@ services:
       MANAGEMENT_SERVER_PORT: 15615
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
     healthcheck:  
-      test: ["CMD", "curl", "-f", "http://localhost:15614/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:15614/users/all"]
       interval: 10s
       timeout: 10s
       retries: 10
