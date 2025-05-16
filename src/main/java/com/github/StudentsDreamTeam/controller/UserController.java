@@ -4,6 +4,7 @@ import com.github.StudentsDreamTeam.dto.UserDTO;
 import com.github.StudentsDreamTeam.model.User;
 import com.github.StudentsDreamTeam.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/{id}")
     public UserDTO getUserProfile(@PathVariable Long id) {
@@ -23,6 +25,11 @@ public class UserController {
     @GetMapping("/all")
     public List<UserDTO> getAll() {
         return userService.getAll().stream().map(UserDTO::fromORM).toList();
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "OK";
     }
 
     @PostMapping("/wrong-add")

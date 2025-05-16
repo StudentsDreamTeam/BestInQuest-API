@@ -1,3 +1,12 @@
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'postgres')
+THEN
+    CREATE ROLE postgres WITH LOGIN PASSWORD '561928' SUPERUSER;
+    END IF;
+END
+$$;
+
 CREATE TABLE IF NOT EXISTS users (
     id            serial    PRIMARY KEY,
     name           varchar(255) NOT NULL CHECK (length(name) > 0),
@@ -37,7 +46,9 @@ CREATE TABLE IF NOT EXISTS version_history (
     reward_xp                  bigint    NOT NULL CHECK (reward_xp >= 0),
     reward_currency              bigint    NOT NULL CHECK (reward_currency >= 0),
     deadline                     timestamptz      CHECK (deadline >= CURRENT_DATE),
-    linked_task_id            bigint
+    linked_task_id            bigint,
+    sphere                      varchar(255),
+    duration                    numeric(21,0) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS clans (
@@ -76,8 +87,8 @@ CREATE TABLE IF NOT EXISTS items (
     description      varchar(255),
     rarity      varchar(255) NOT NULL CHECK (length(rarity) > 0),
     xp_multiplier     bigint    NOT NULL CHECK (xp_multiplier >= 0),
-    currency_multiplier bigint    NOT NULL CHECK (currency_multiplier >= 0),
-    duration  varchar(255) NOT NULL CHECK (length(duration) > 0),
+    currency_multiplier bigint    NOT NULL,
+    duration  numeric(21,0) NOT NULL,
     cost     bigint    NOT NULL CHECK (cost >= 0)
 );
 
@@ -113,7 +124,7 @@ CREATE TABLE IF NOT EXISTS tasks_pointers (
     project         bigint,
     creation_date  timestamptz NOT NULL,
     linked_task_id integer,
-    UNIQUE (task, project)
+    UNIQUE (linked_task_id, project)
 );
 
 CREATE TABLE IF NOT EXISTS commentaries (
@@ -192,7 +203,7 @@ CREATE TABLE IF NOT EXISTS project_items (
 
 CREATE TABLE IF NOT EXISTS xp_gains (
     id            serial    PRIMARY KEY,
-    amount    bigint    NOT NULL CHECK (amount >= 0),
+    amount    bigint    NOT NULL,
     date          timestamptz NOT NULL,
     user_id  bigint    NOT NULL CHECK (user_id > 0)
 );
@@ -230,3 +241,6 @@ ALTER TABLE teams_participants ADD CONSTRAINT teams_participants_fk2 FOREIGN KEY
 ALTER TABLE project_items ADD CONSTRAINT project_items_fk1 FOREIGN KEY (project) REFERENCES projects(id);
 ALTER TABLE project_items ADD CONSTRAINT project_items_fk2 FOREIGN KEY (item) REFERENCES items(id);
 ALTER TABLE xp_gains ADD CONSTRAINT xp_gains_fk3 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE version_history
+ADD COLUMN applied_xp_reward BIGINT DEFAULT 0,
+ADD COLUMN applied_currency_reward BIGINT DEFAULT 0;
