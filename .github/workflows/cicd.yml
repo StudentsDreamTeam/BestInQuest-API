@@ -116,7 +116,7 @@ jobs:
         run: |
           cd $DEPLOY_DIR
           # Останавливаем старые контейнеры (если есть)
-          docker compose down -v || true 
+           docker compose down --rmi all -v || true
 
           docker network rm app_network || true
 
