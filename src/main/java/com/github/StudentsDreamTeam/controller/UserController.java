@@ -27,6 +27,11 @@ public class UserController {
         return userService.getAll().stream().map(UserDTO::fromORM).toList();
     }
 
+    @GetMapping("/ping")
+    public String ping() {
+        return "OK";
+    }
+
     @PostMapping("/wrong-add")
     public UserDTO testAdd(@RequestBody UserDTO userDTO) {
         User user = User.fromDTO(userDTO);
