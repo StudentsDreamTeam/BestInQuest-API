@@ -116,9 +116,11 @@ jobs:
         run: |
           cd $DEPLOY_DIR
           # Останавливаем старые контейнеры (если есть)
-           docker compose down --rmi all -v || true
+          docker compose down --rmi all -v || true
 
+          if docker network inspect app_network >/dev/null 2>&1; then
           docker network rm app_network || true
+          fi
 
           docker network create app_network || true
           
