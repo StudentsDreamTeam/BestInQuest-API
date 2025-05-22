@@ -57,7 +57,14 @@ services:
     environment:
       - API_BASE_URL="http://api:15614"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      # test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      test: |
+      bash -c '
+      # Проверяем доступность самого фронтенда
+      curl -f http://localhost:5173 &&
+      # Проверяем доступность API через внутреннюю сеть
+      curl -f http://api:15614/users/ping
+      '
       interval: 10s
       timeout: 10s
       retries: 10
