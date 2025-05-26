@@ -16,6 +16,9 @@ import java.util.List;
 public class TaskService {
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TaskRepository taskRepository;
 
     @Autowired
@@ -61,6 +64,7 @@ public class TaskService {
 
         executor.setXp(executor.getXp() + (int) finalXp);
         userRepository.save(executor);
+        userService.updateUserLevel(executor);
 
         xpGainsRepository.save(new XpGains(
                 executor,
@@ -90,6 +94,7 @@ public class TaskService {
 
         executor.setXp(Math.max(0, executor.getXp() + (int) finalXp));
         userRepository.save(executor);
+        userService.updateUserLevel(executor);
 
         xpGainsRepository.save(new XpGains(
                 executor,

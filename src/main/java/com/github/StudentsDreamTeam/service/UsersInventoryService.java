@@ -22,6 +22,8 @@ import static com.github.StudentsDreamTeam.dto.UsersInventoryDTO.fromORM;
 
 @Service
 public class UsersInventoryService {
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UsersInventoryRepository inventoryRepo;
