@@ -119,14 +119,14 @@ public class TaskService {
         existingTask.setTitle(task.getTitle());
         existingTask.setDescription(task.getDescription());
         existingTask.setDeadline(task.getDeadline());
-//        existingTask.setPriority(task.getPriority());
-//        existingTask.setDifficulty(task.getDifficulty());
-//        existingTask.setRewardXp(task.getRewardXp());
-//        existingTask.setRewardCurrency(task.getRewardCurrency());
-//        existingTask.setSphere(task.getSphere());
-//        existingTask.setDuration(task.getDuration());
-//        existingTask.setFastDoneBonus(task.getFastDoneBonus());
-//        existingTask.setCombo(task.getCombo());
+        existingTask.setPriority(task.getPriority());
+        existingTask.setDifficulty(task.getDifficulty());
+        existingTask.setRewardXp(task.getRewardXp());
+        existingTask.setRewardCurrency(task.getRewardCurrency());
+        existingTask.setSphere(task.getSphere());
+        existingTask.setDuration(task.getDuration());
+        existingTask.setFastDoneBonus(task.getFastDoneBonus());
+        existingTask.setCombo(task.getCombo());
 
         if (task.getExecutor() != null
                 && task.getExecutor().getId() != null
