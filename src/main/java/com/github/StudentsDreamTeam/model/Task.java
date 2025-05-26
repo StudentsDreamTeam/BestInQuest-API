@@ -117,7 +117,11 @@ public class Task {
         );
 
         result.setAuthor(User.fromDTO(taskDTO.author()));
-        result.setExecutor(User.fromDTO(taskDTO.executor()));
+        if (taskDTO.executor() != null && taskDTO.executor().id() != null) {
+            User executor = new User();
+            executor.setId(taskDTO.executor().id());
+            result.setExecutor(executor);
+        }
         result.setUpdateDate(taskDTO.updateDate());
         result.setFastDoneBonus(taskDTO.fastDoneBonus() != null ? taskDTO.fastDoneBonus() : 0);
         result.setCombo(taskDTO.combo() != null ? taskDTO.combo() : false);
