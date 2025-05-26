@@ -29,6 +29,9 @@ public class UsersInventoryService {
     private UsersInventoryRepository inventoryRepo;
 
     @Autowired
+    private AchievementDetector achievementDetector;
+
+    @Autowired
     private UserRepository userRepo;
 
     @Autowired
@@ -53,6 +56,7 @@ public class UsersInventoryService {
         inventory.setItem(item);
         inventory.setAmount(usersInventoryDTO.amount());
         inventory.setAcquireDate(LocalDateTime.now());
+        achievementDetector.detectForUser(user);
 
         return fromORM(inventoryRepo.save(inventory));
     }
@@ -74,6 +78,7 @@ public class UsersInventoryService {
 
         Item item = inventory.getItem();
         long salePrice = item.getCost();
+        achievementDetector.detectForUser(user);
         userService.updateUserLevel(user);
 
         incomeRepo.save(new Income(

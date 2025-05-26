@@ -1,9 +1,14 @@
 package com.github.StudentsDreamTeam.controller;
 
 import com.github.StudentsDreamTeam.dto.UpdateUserProfileDTO;
+import com.github.StudentsDreamTeam.dto.UserAchievementDTO;
 import com.github.StudentsDreamTeam.dto.UserDTO;
 import com.github.StudentsDreamTeam.model.User;
+import com.github.StudentsDreamTeam.model.UserAchievement;
+import com.github.StudentsDreamTeam.repository.UserAchievementRepository;
+import com.github.StudentsDreamTeam.repository.UserRepository;
 import com.github.StudentsDreamTeam.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +22,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserAchievementRepository userAchievementRepository;
 
     @GetMapping("/{id}")
     public UserDTO getUserProfile(@PathVariable Long id) {
@@ -49,4 +60,14 @@ public class UserController {
         return (UserDTO.fromORM(updated));
     }
 
+    @GetMapping("/achievements/{userId}")
+    public List<UserAchievementDTO> getAchievements(@PathVariable Integer userId) {
+        User user = userRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        List<UserAchievement> achievements = userAchievementRepository.findByUser(user);
+        return achievements.stream()
+                .map(UserAchievementDTO::fromORM)
+                .toList();
+    }
 }

@@ -1,11 +1,7 @@
 package com.github.StudentsDreamTeam.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
+import com.github.StudentsDreamTeam.enums.AchievementType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,9 +21,13 @@ public class Achievement {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "required_xp")
-    private Integer required_xp;
+    @Column(name = "required_value")
+    private Integer required_value;
 
     @Column(name = "icon")
     private String icon;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private AchievementType type;
 }

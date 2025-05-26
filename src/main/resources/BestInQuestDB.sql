@@ -151,8 +151,9 @@ CREATE TABLE IF NOT EXISTS achievements (
     id            serial    PRIMARY KEY,
     name      varchar(255) NOT NULL UNIQUE CHECK (length(name) > 0),
     description      varchar(255) NOT NULL CHECK (length(description) > 0),
-    required_xp  bigint    NOT NULL CHECK (required_xp >= 0),
-    icon        varchar(255) NOT NULL CHECK (length(icon) > 0)
+    required_value  bigint    NOT NULL CHECK (required_xp >= 0),
+    icon        varchar(255) NOT NULL CHECK (length(icon) > 0),
+    type        varchar(255) NOT NULL CHECK (length(type) > 0)
 );
 
 CREATE TABLE IF NOT EXISTS users_achievements (
