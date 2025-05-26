@@ -22,6 +22,8 @@ import static com.github.StudentsDreamTeam.dto.UsersInventoryDTO.fromORM;
 
 @Service
 public class UsersInventoryService {
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UsersInventoryRepository inventoryRepo;
@@ -72,6 +74,7 @@ public class UsersInventoryService {
 
         Item item = inventory.getItem();
         long salePrice = item.getCost();
+        userService.updateUserLevel(user);
 
         incomeRepo.save(new Income(
                 user,

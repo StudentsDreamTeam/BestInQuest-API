@@ -1,6 +1,8 @@
 package com.github.StudentsDreamTeam.service;
 
+import com.github.StudentsDreamTeam.model.LevelRequirement;
 import com.github.StudentsDreamTeam.model.User;
+import com.github.StudentsDreamTeam.repository.LevelRequirementRepository;
 import com.github.StudentsDreamTeam.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +12,31 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final LevelRequirementRepository levelRequirementRepository;
+
+    public void updateUserLevel(User user) {
+        List<LevelRequirement> matchedLevels = levelRequirementRepository.findAllByXp(user.getXp());
+        if (!matchedLevels.isEmpty()) {
+            int newLevel = matchedLevels.get(0).getLevel();
+            if (!Objects.equals(user.getLevel(), newLevel)) {
+                user.setLevel(newLevel);
+                userRepository.save(user);
+            }
+        }
+    }
+
+    public Integer getXpToNextLevel(User user) {
+        return levelRequirementRepository.findNextLevel(user.getLevel())
+                .map(next -> next.getRequiredXp() - user.getXp())
+                .orElse(0);
+    }
 
     @Transactional
     public User registerUser(User user) {

@@ -208,6 +208,63 @@ CREATE TABLE IF NOT EXISTS xp_gains (
     user_id  bigint    NOT NULL CHECK (user_id > 0)
 );
 
+CREATE TABLE level_requirements (
+    level INTEGER PRIMARY KEY,
+    required_xp BIGINT NOT NULL
+);
+
+--следующие +100 * (n-1)
+INSERT INTO level_requirements (level, required_xp) VALUES (1, 0);
+INSERT INTO level_requirements (level, required_xp) VALUES (2, 100);
+INSERT INTO level_requirements (level, required_xp) VALUES (3, 300);
+INSERT INTO level_requirements (level, required_xp) VALUES (4, 600);
+INSERT INTO level_requirements (level, required_xp) VALUES (5, 1000);
+INSERT INTO level_requirements (level, required_xp) VALUES (6, 1500);
+INSERT INTO level_requirements (level, required_xp) VALUES (7, 2100);
+INSERT INTO level_requirements (level, required_xp) VALUES (8, 2800);
+INSERT INTO level_requirements (level, required_xp) VALUES (9, 3600);
+INSERT INTO level_requirements (level, required_xp) VALUES (10, 4500);
+INSERT INTO level_requirements (level, required_xp) VALUES (11, 5500);
+INSERT INTO level_requirements (level, required_xp) VALUES (12, 6600);
+INSERT INTO level_requirements (level, required_xp) VALUES (13, 7800);
+INSERT INTO level_requirements (level, required_xp) VALUES (14, 9100);
+INSERT INTO level_requirements (level, required_xp) VALUES (15, 10500);
+INSERT INTO level_requirements (level, required_xp) VALUES (16, 12000);
+INSERT INTO level_requirements (level, required_xp) VALUES (17, 13600);
+INSERT INTO level_requirements (level, required_xp) VALUES (18, 15300);
+INSERT INTO level_requirements (level, required_xp) VALUES (19, 17100);
+INSERT INTO level_requirements (level, required_xp) VALUES (20, 19000);
+INSERT INTO level_requirements (level, required_xp) VALUES (21, 21000);
+INSERT INTO level_requirements (level, required_xp) VALUES (22, 23100);
+INSERT INTO level_requirements (level, required_xp) VALUES (23, 25300);
+INSERT INTO level_requirements (level, required_xp) VALUES (24, 27600);
+INSERT INTO level_requirements (level, required_xp) VALUES (25, 30000);
+INSERT INTO level_requirements (level, required_xp) VALUES (26, 32500);
+INSERT INTO level_requirements (level, required_xp) VALUES (27, 35100);
+INSERT INTO level_requirements (level, required_xp) VALUES (28, 37800);
+INSERT INTO level_requirements (level, required_xp) VALUES (29, 40600);
+INSERT INTO level_requirements (level, required_xp) VALUES (30, 43500);
+INSERT INTO level_requirements (level, required_xp) VALUES (31, 46500);
+INSERT INTO level_requirements (level, required_xp) VALUES (32, 49600);
+INSERT INTO level_requirements (level, required_xp) VALUES (33, 52800);
+INSERT INTO level_requirements (level, required_xp) VALUES (34, 56100);
+INSERT INTO level_requirements (level, required_xp) VALUES (35, 59500);
+INSERT INTO level_requirements (level, required_xp) VALUES (36, 63000);
+INSERT INTO level_requirements (level, required_xp) VALUES (37, 66600);
+INSERT INTO level_requirements (level, required_xp) VALUES (38, 70300);
+INSERT INTO level_requirements (level, required_xp) VALUES (39, 74100);
+INSERT INTO level_requirements (level, required_xp) VALUES (40, 78000);
+INSERT INTO level_requirements (level, required_xp) VALUES (41, 82000);
+INSERT INTO level_requirements (level, required_xp) VALUES (42, 86100);
+INSERT INTO level_requirements (level, required_xp) VALUES (43, 90300);
+INSERT INTO level_requirements (level, required_xp) VALUES (44, 94600);
+INSERT INTO level_requirements (level, required_xp) VALUES (45, 99000);
+INSERT INTO level_requirements (level, required_xp) VALUES (46, 103500);
+INSERT INTO level_requirements (level, required_xp) VALUES (47, 108100);
+INSERT INTO level_requirements (level, required_xp) VALUES (48, 112800);
+INSERT INTO level_requirements (level, required_xp) VALUES (49, 117600);
+INSERT INTO level_requirements (level, required_xp) VALUES (50, 122500);
+
 ALTER TABLE projects ADD CONSTRAINT project_fk3 FOREIGN KEY (owner) REFERENCES users(id);
 ALTER TABLE version_history ADD CONSTRAINT version_history_fk6 FOREIGN KEY (author) REFERENCES users(id);
 ALTER TABLE version_history ADD CONSTRAINT version_history_fk7 FOREIGN KEY (executor) REFERENCES users(id);
