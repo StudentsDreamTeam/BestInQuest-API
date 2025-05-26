@@ -74,7 +74,6 @@ public class UsersInventoryService {
 
         Item item = inventory.getItem();
         long salePrice = item.getCost();
-        userService.updateUserLevel(user);
 
         incomeRepo.save(new Income(
                 user,
