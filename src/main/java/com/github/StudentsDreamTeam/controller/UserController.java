@@ -1,5 +1,6 @@
 package com.github.StudentsDreamTeam.controller;
 
+import com.github.StudentsDreamTeam.dto.UpdateUserProfileDTO;
 import com.github.StudentsDreamTeam.dto.UserDTO;
 import com.github.StudentsDreamTeam.model.User;
 import com.github.StudentsDreamTeam.service.UserService;
@@ -38,4 +39,14 @@ public class UserController {
 
         return UserDTO.fromORM(userService.registerUser(user));
     }
+
+    @PutMapping("/profile/{userId}")
+    public UserDTO updateProfile(
+            @PathVariable Integer userId,
+            @RequestBody UpdateUserProfileDTO dto
+    ) {
+        User updated = userService.updateUserProfile(userId, dto);
+        return (UserDTO.fromORM(updated));
+    }
+
 }
