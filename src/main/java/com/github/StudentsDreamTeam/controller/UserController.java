@@ -51,23 +51,12 @@ public class UserController {
         return UserDTO.fromORM(userService.registerUser(user));
     }
 
-    @PutMapping("/profile/{userId}")
+    @PutMapping("/update-profile/{userId}")
     public UserDTO updateProfile(
             @PathVariable Integer userId,
             @RequestBody UpdateUserProfileDTO dto
     ) {
         User updated = userService.updateUserProfile(userId, dto);
         return (UserDTO.fromORM(updated));
-    }
-
-    @GetMapping("/achievements/{userId}")
-    public List<UserAchievementDTO> getAchievements(@PathVariable Integer userId) {
-        User user = userRepository.findById(Long.valueOf(userId))
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        List<UserAchievement> achievements = userAchievementRepository.findByUser(user);
-        return achievements.stream()
-                .map(UserAchievementDTO::fromORM)
-                .toList();
     }
 }

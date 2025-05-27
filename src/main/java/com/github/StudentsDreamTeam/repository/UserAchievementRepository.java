@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface UserAchievementRepository extends JpaRepository<UserAchievement, Integer> {
     List<UserAchievement> findByUser(User user);
+    List<UserAchievement> findByAchievement(Achievement achievement);
     boolean existsByUserAndAchievement(User user, Achievement achievement);
 }
