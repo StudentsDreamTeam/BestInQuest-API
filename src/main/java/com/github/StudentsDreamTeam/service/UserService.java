@@ -28,7 +28,13 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (dto.name() != null) user.setName(dto.name());
-        if (dto.email() != null) user.setEmail(dto.email());
+        if (dto.email() != null && !dto.email().equalsIgnoreCase(user.getEmail())) {
+            boolean emailTaken = userRepository.existsByEmailIgnoreCase(dto.email());
+            if (emailTaken) {
+                throw new IllegalStateException("Email is already in use: " + dto.email());
+            }
+            user.setEmail(dto.email());
+        }
         if (dto.password() != null) user.setPassword(dto.password());
 
         return userRepository.save(user);
