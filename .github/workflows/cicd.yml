@@ -24,7 +24,9 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B verify
+       # run: mvn -B package --file pom.xml
+         
 
       - name: SonarCloud Scan
         if: success()
@@ -39,9 +41,10 @@ jobs:
             -Dsonar.java.source=21
             -Dsonar.sources=src/main/java
             -Dsonar.java.binaries=target/classes
-            -Dsonar.exclusions=**/generated/**,**/model/**
+            -Dsonar.exclusions=**/generated/**,**/model/**,**/target/**
             -Dsonar.tests=src/test/java
-            -Dsonar.coverage.exclusions=**/model/**,**/config/**
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml  # Путь к отчету JaCoCo
+            -Dsonar.coverage.exclusions=**/model/**,**/config/**,**/target/**
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
 
   test:
