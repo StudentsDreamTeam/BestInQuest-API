@@ -22,23 +22,28 @@ public class AchievementDetector {
     private final UserAchievementRepository userAchievementRepository;
     private final TaskRepository taskRepository;
 
+    public boolean checkAchievementRequirements(User user, Achievement achievement) {
+        long comparingValue;
+
+        switch (achievement.getType()) {
+            case XP -> comparingValue = user.getXp() != null ? user.getXp() : 0;
+            case STREAK -> comparingValue = user.getStreak() != null ? user.getStreak() : 0;
+            case TASKS_COMPLETED -> comparingValue = taskRepository.countCompletedByUser(user);
+            case INVENTORY_ITEMS -> comparingValue = user.getInventoryItemsCount();
+            default -> throw new IllegalArgumentException("Unknown achievement type: " + achievement.getType());
+        }
+
+        return comparingValue >= achievement.getRequired_value();
+    }
+
     public List<UserAchievementDTO> detectForUser(User user) {
-        List<Achievement> allAchievements = achievementRepository.findAll();
+        List<Achievement> allAchievements = achievementRepository.findAchievementsNotOwnedByUserNative(user.getId());
         List<UserAchievementDTO> newAchievements = new ArrayList<>();
 
         for (Achievement achievement : allAchievements) {
-            boolean alreadyHas = userAchievementRepository.existsByUserAndAchievement(user, achievement);
-            long completedCount = taskRepository.countCompletedByUser(user);
-            if (alreadyHas) continue;
+            if (userAchievementRepository.existsByUserAndAchievement(user, achievement)) continue;
 
-            boolean conditionMet = switch (achievement.getType()) {
-                case XP -> user.getXp() >= achievement.getRequired_value();
-                case STREAK -> user.getStreak() >= achievement.getRequired_value();
-                case TASKS_COMPLETED -> completedCount >= achievement.getRequired_value();
-                case INVENTORY_ITEMS -> user.getInventoryItems() >= achievement.getRequired_value();
-            };
-
-            if (conditionMet) {
+            if (checkAchievementRequirements(user, achievement)) {
                 UserAchievement ua = new UserAchievement();
                 ua.setUser(user);
                 ua.setAchievement(achievement);
@@ -54,22 +59,11 @@ public class AchievementDetector {
 
     public void revertAchievementsForUser(User user) {
         List<UserAchievement> userAchievements = userAchievementRepository.findByUser(user);
-        long completedCount = taskRepository.countCompletedByUser(user);
 
         for (UserAchievement ua : userAchievements) {
-            Achievement achievement = ua.getAchievement();
-
-            boolean conditionStillMet = switch (achievement.getType()) {
-                case XP -> user.getXp() >= achievement.getRequired_value();
-                case STREAK -> user.getStreak() >= achievement.getRequired_value();
-                case TASKS_COMPLETED -> completedCount >= achievement.getRequired_value();
-                case INVENTORY_ITEMS -> user.getInventoryItems() >= achievement.getRequired_value();
-            };
-
-            if (!conditionStillMet) {
+            if (!checkAchievementRequirements(user, ua.getAchievement())) {
                 userAchievementRepository.delete(ua);
             }
         }
     }
-
 }

@@ -72,7 +72,7 @@ public class User {
         return tasks.stream().filter(task -> task.getStatus() == Status.DONE).count();
     }
 
-    public long getInventoryItems() {
+    public long getInventoryItemsCount() {
         if (inventory == null) return 0;
         return inventory.stream()
                 .mapToLong(UsersInventory::getAmount)
