@@ -67,14 +67,7 @@ public class AchievementService {
         existing.setIcon(dto.icon());
 
         Achievement updated = achievementRepository.save(existing);
-        List<UserAchievement> affected = userAchievementRepository.findByAchievement(updated);
-
-        for (UserAchievement ua : affected) {
-            User user = ua.getUser();
-            if (!detector.checkAchievementRequirements(user, updated)) {
-                userAchievementRepository.delete(ua);
-            }
-        }
+        removeInvalidUserAchievements(updated);
 
         return AchievementDTO.fromORM(updated);
     }

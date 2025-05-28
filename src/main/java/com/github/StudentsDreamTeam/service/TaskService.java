@@ -198,8 +198,6 @@ public class TaskService {
         pointer.setCreationDate(LocalDateTime.now());
         pointer.setLinkedTask(task);
 
-        task.getTaskPointers().add(pointer);
-
         Task savedTask = taskRepository.save(task);
 
         pointer = taskPointerRepository.save(pointer);

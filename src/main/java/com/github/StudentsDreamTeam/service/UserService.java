@@ -29,7 +29,7 @@ public class UserService {
 
         if (dto.name() != null) user.setName(dto.name());
         if (dto.email() != null && !dto.email().equalsIgnoreCase(user.getEmail())) {
-            boolean emailTaken = userRepository.existsByEmailIgnoreCase(dto.email());
+            boolean emailTaken = userRepository.existsByEmail(dto.email());
             if (emailTaken) {
                 throw new IllegalStateException("Email is already in use: " + dto.email());
             }
@@ -95,5 +95,4 @@ public class UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
-
 }

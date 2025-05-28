@@ -41,7 +41,6 @@ public class AchievementDetector {
         List<UserAchievementDTO> newAchievements = new ArrayList<>();
 
         for (Achievement achievement : allAchievements) {
-            if (userAchievementRepository.existsByUserAndAchievement(user, achievement)) continue;
 
             if (checkAchievementRequirements(user, achievement)) {
                 UserAchievement ua = new UserAchievement();

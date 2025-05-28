@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS tasks_pointers (
     id             serial    PRIMARY KEY,
 --    task         bigint,
     project         bigint,
-    creation_date  timestamptz NOT NULL,
+    creation_date  timestamptz,
     linked_task_id integer,
     UNIQUE (linked_task_id, project)
 );
