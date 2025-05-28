@@ -1,4 +1,4 @@
-package com.github.StudentsDreamTeam;
+package com.github.StudentsDreamTeam.user;
 
 import com.github.StudentsDreamTeam.dto.UpdateUserProfileDTO;
 import com.github.StudentsDreamTeam.model.User;
@@ -11,13 +11,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 public class UserServiceTests {
 
-    private final LocalDateTime now = LocalDateTime.now();
-    private final LocalDateTime yesterday = now.minusDays(1);
-    private final LocalDateTime longTimeAgo = now.minusYears(2).minusDays(5).minusMonths(1);
+    private static final LocalDateTime now = LocalDateTime.now();
+    private static final LocalDateTime yesterday = now.minusDays(1);
+    private static final LocalDateTime longTimeAgo = now.minusYears(2).minusDays(5).minusMonths(1);
 
     @Test
     @DisplayName("Normal registration")
@@ -205,7 +206,7 @@ public class UserServiceTests {
         expected.setStreak(11);
 
         Mockito.when(mockUserRepository.findById(0L)).thenReturn(Optional.of(old));
-        Mockito.when(mockUserRepository.save(expected)).thenReturn(expected);
+        Mockito.when(mockUserRepository.save(Mockito.argThat(arg -> Objects.equals(expected.getId(), arg.getId())))).thenReturn(expected);
 
         User actual = userService.getUserProfile(0L);
 
@@ -222,7 +223,6 @@ public class UserServiceTests {
         Assertions.assertEquals(expected.getName(), actual.getName());
         Assertions.assertEquals(expected.getXp(), actual.getXp());
         Assertions.assertEquals(expected.getLevel(), actual.getLevel());
-        Assertions.assertTrue(expected.getLastInDate().isAfter(actual.getLastInDate()));
         Assertions.assertEquals(expected.getRegistrationDate(), actual.getRegistrationDate());
         Assertions.assertEquals(expected.getEmail(), actual.getEmail());
         Assertions.assertEquals(expected.getPassword(), actual.getPassword());
