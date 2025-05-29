@@ -1,0 +1,74 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    env_file: .env
+    environment:
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US"
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./BestInQuestDB.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - app_network
+
+  api:
+    image: ${DOCKER_REGISTRY}/api:latest
+    depends_on:
+      postgres:
+        condition: service_healthy 
+    env_file: .env
+    ports:
+      - "15614:15614"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_ENABLED: "false"
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      MANAGEMENT_SERVER_PORT: 15615
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
+    healthcheck:  
+      test: ["CMD", "curl", "-f", "http://localhost:15614/users/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - app_network
+
+  frontend:
+    image: ${DOCKER_REGISTRY}/frontend:latest
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file: .env
+    ports:
+      - "5173:5173"
+    environment:
+      - API_BASE_URL="http://api:15614"
+    healthcheck:
+      # test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      test: ["CMD-SHELL", "curl -f http://localhost:5173 && curl -f http://api:15614/users/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    external: true
