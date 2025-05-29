@@ -47,6 +47,7 @@ jobs:
             -Dsonar.analysis.mode=publish
             -Dsonar.qualitygate.wait=true
             -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.scm.disabled=true
             -Dsonar.coverage.exclusions=**/model/**,**/config/**,**/target,**/enums/**,**/controller/**,**/configuration/**
           # ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
 
