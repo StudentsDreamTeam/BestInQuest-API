@@ -1,5 +1,6 @@
 package com.github.StudentsDreamTeam.controller;
 
+import com.github.StudentsDreamTeam.dto.AuthDTO;
 import com.github.StudentsDreamTeam.dto.UpdateUserProfileDTO;
 import com.github.StudentsDreamTeam.dto.UserAchievementDTO;
 import com.github.StudentsDreamTeam.dto.UserDTO;
@@ -43,6 +44,22 @@ public class UserController {
         User user = User.fromDTO(userDTO);
 
         return UserDTO.fromORM(userService.registerUser(user));
+    }
+
+    @PostMapping("/auth")
+    public UserDTO auth(@RequestBody AuthDTO authDTO) {
+        List<User> users = userService.getAll();
+        for (User user : users) {
+            if (authDTO.email().equalsIgnoreCase(user.getEmail())) {
+                if (authDTO.password().equals(user.getPassword())) {
+                    return UserDTO.fromORM(user);
+                }
+                else {
+                    throw new SecurityException("Incorrect login or password.");
+                }
+            }
+        }
+        throw new SecurityException("Incorrect login or password.");
     }
 
     @PutMapping("/update-profile/{userId}")
