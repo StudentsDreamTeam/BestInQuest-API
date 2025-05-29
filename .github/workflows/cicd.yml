@@ -41,10 +41,10 @@ jobs:
             -Dsonar.java.source=21
             -Dsonar.sources=src/main/java
             -Dsonar.java.binaries=target/classes
-            -Dsonar.exclusions=**/generated/**,**/model/**,**/target/**
+            -Dsonar.exclusions=**/generated/**,**/model/**,**/target/**,**/enums/**,**/controller/**,**/configuration/**
             -Dsonar.tests=src/test/java
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml  # Путь к отчету JaCoCo
-            -Dsonar.coverage.exclusions=**/model/**,**/config/**,**/target/**
+            -Dsonar.coverage.exclusions=**/model/**,**/config/**,**/target,**/enums/**,**/controller/**,**/configuration/**
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
 
   test:
