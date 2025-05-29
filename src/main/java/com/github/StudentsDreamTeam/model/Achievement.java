@@ -1,15 +1,11 @@
 package com.github.StudentsDreamTeam.model;
 
 import com.github.StudentsDreamTeam.dto.AchievementDTO;
-import com.github.StudentsDreamTeam.dto.TaskDTO;
-import com.github.StudentsDreamTeam.dto.UserDTO;
 import com.github.StudentsDreamTeam.enums.AchievementType;
-import com.github.StudentsDreamTeam.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 @Entity
@@ -29,7 +25,7 @@ public class Achievement {
     private String description;
 
     @Column(name = "required_value")
-    private Integer required_value;
+    private Integer requiredValue;
 
     @Column(name = "icon")
     private String icon;
@@ -51,7 +47,7 @@ public class Achievement {
                         ? AchievementType.fromValue(achievementDTO.type())
                         : AchievementType.XP
         );
-        achievement.setRequired_value(achievementDTO.requiredXp());
+        achievement.setRequiredValue(achievementDTO.requiredXp());
         achievement.setIcon(achievementDTO.icon());
         return achievement;
     }

@@ -32,10 +32,10 @@ public class Item {
     private String rarity;
 
     @Column(name = "xp_multiplier", nullable = false)
-    private Long xpMultiplier;
+    private Float xpMultiplier;
 
     @Column(name = "currency_multiplier", nullable = false)
-    private Long currencyMultiplier;
+    private Float currencyMultiplier;
 
     @Column(name = "duration")
     private Duration duration;

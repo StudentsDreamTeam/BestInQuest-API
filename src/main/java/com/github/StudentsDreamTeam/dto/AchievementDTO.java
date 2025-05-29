@@ -13,7 +13,7 @@ public record AchievementDTO(Integer id,
                 achievement.getId(),
                 achievement.getName(),
                 achievement.getDescription(),
-                achievement.getRequired_value(),
+                achievement.getRequiredValue(),
                 achievement.getIcon(),
                 achievement.getType() != null ? achievement.getType().getValue() : null
         );
