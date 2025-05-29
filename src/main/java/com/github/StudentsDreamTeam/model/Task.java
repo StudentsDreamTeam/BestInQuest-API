@@ -85,9 +85,6 @@ public class Task {
     @JoinColumn(name = "linked_task_id")
     private TaskPointer taskPointer;
 
-    @OneToMany(mappedBy = "linkedTask", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TaskPointer> taskPointers = new ArrayList<>();
-
     @Column(name = "applied_xp_reward")
     private Long appliedXpReward;
 

@@ -23,12 +23,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserAchievementRepository userAchievementRepository;
-
     @GetMapping("/{id}")
     public UserDTO getUserProfile(@PathVariable Long id) {
         return UserDTO.fromORM(userService.getUserProfile(id));
