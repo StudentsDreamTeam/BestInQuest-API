@@ -26,7 +26,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B verify
        # run: mvn -B package --file pom.xml
-         
+        
 
       - name: SonarCloud Scan
         if: success()
