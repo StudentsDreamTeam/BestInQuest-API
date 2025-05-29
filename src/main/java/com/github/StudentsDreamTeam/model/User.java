@@ -1,6 +1,7 @@
 package com.github.StudentsDreamTeam.model;
 
 import com.github.StudentsDreamTeam.dto.UserDTO;
+import com.github.StudentsDreamTeam.enums.Status;
 import jakarta.persistence.*;
 
 import lombok.Data;
@@ -47,6 +48,9 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Project> projects;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UsersInventory> inventory;
+
     public static User fromDTO(UserDTO userDTO) {
         if (userDTO == null) return null;
 
@@ -62,4 +66,17 @@ public class User {
 
         return user;
     }
+
+    public long getCompletedTasksCount() {
+        if (tasks == null) return 0;
+        return tasks.stream().filter(task -> task.getStatus() == Status.DONE).count();
+    }
+
+    public long getInventoryItemsCount() {
+        if (inventory == null) return 0;
+        return inventory.stream()
+                .mapToLong(UsersInventory::getAmount)
+                .sum();
+    }
+
 }

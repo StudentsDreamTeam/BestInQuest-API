@@ -1,5 +1,6 @@
 package com.github.StudentsDreamTeam.service;
 
+import com.github.StudentsDreamTeam.dto.UserAchievementDTO;
 import com.github.StudentsDreamTeam.enums.Status;
 import com.github.StudentsDreamTeam.model.*;
 import com.github.StudentsDreamTeam.repository.*;
@@ -17,6 +18,9 @@ public class TaskService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AchievementDetector achievementDetector;
 
     @Autowired
     private TaskRepository taskRepository;
@@ -64,6 +68,8 @@ public class TaskService {
 
         executor.setXp(executor.getXp() + (int) finalXp);
         userRepository.save(executor);
+        List<UserAchievementDTO> newAchievements = achievementDetector.detectForUser(executor);
+
         userService.updateUserLevel(executor);
 
         xpGainsRepository.save(new XpGains(
@@ -94,6 +100,8 @@ public class TaskService {
 
         executor.setXp(Math.max(0, executor.getXp() + (int) finalXp));
         userRepository.save(executor);
+        achievementDetector.revertAchievementsForUser(executor);
+
         userService.updateUserLevel(executor);
 
         xpGainsRepository.save(new XpGains(
@@ -189,8 +197,6 @@ public class TaskService {
         TaskPointer pointer = new TaskPointer();
         pointer.setCreationDate(LocalDateTime.now());
         pointer.setLinkedTask(task);
-
-        task.getTaskPointers().add(pointer);
 
         Task savedTask = taskRepository.save(task);
 

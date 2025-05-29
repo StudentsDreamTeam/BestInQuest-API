@@ -1,6 +1,8 @@
 package com.github.StudentsDreamTeam;
 
+import com.github.StudentsDreamTeam.model.LevelRequirement;
 import com.github.StudentsDreamTeam.model.User;
+import com.github.StudentsDreamTeam.repository.LevelRequirementRepository;
 import com.github.StudentsDreamTeam.repository.UserRepository;
 import com.github.StudentsDreamTeam.service.UserService;
 import org.junit.Test;
@@ -15,8 +17,9 @@ public class UserServiceTests {
     @DisplayName("Normal registration")
     public void normalRegistration() {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
+        LevelRequirementRepository mockLevelRequirementRepository = Mockito.mock(LevelRequirementRepository.class);
 
-        UserService userService = new UserService(mockUserRepository);
+        UserService userService = new UserService(mockUserRepository, mockLevelRequirementRepository);
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -54,8 +57,9 @@ public class UserServiceTests {
     @DisplayName("Duplicate email deny of registration")
     public void duplicateEmail() {
         UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
+        LevelRequirementRepository mockLevelRequirementRepository = Mockito.mock(LevelRequirementRepository.class);
 
-        UserService userService = new UserService(mockUserRepository);
+        UserService userService = new UserService(mockUserRepository, mockLevelRequirementRepository);
 
         LocalDateTime now = LocalDateTime.now();
 

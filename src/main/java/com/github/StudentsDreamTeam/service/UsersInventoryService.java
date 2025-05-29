@@ -29,6 +29,9 @@ public class UsersInventoryService {
     private UsersInventoryRepository inventoryRepo;
 
     @Autowired
+    private AchievementDetector achievementDetector;
+
+    @Autowired
     private UserRepository userRepo;
 
     @Autowired
@@ -53,6 +56,7 @@ public class UsersInventoryService {
         inventory.setItem(item);
         inventory.setAmount(usersInventoryDTO.amount());
         inventory.setAcquireDate(LocalDateTime.now());
+        achievementDetector.detectForUser(user);
 
         return fromORM(inventoryRepo.save(inventory));
     }
@@ -62,6 +66,9 @@ public class UsersInventoryService {
         UsersInventory inventory = inventoryRepo.findByUserIdAndItemId(userId, itemId)
                 .orElseThrow(() -> new EntityNotFoundException("Item not found in user's inventory"));
         inventoryRepo.delete(inventory);
+
+        User user = inventory.getUser();
+        achievementDetector.revertAchievementsForUser(user);
     }
 
     @Transactional
@@ -74,6 +81,7 @@ public class UsersInventoryService {
 
         Item item = inventory.getItem();
         long salePrice = item.getCost();
+        achievementDetector.detectForUser(user);
 
         incomeRepo.save(new Income(
                 user,
