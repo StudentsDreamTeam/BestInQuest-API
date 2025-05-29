@@ -41,15 +41,13 @@ jobs:
             -Dsonar.java.source=21
             -Dsonar.sources=src/main/java
             -Dsonar.java.binaries=target/classes
-            -Dsonar.exclusions=**/generated/**,**/target/**,**/configuration/**,**/BestInQuestApplication.java,**/ClanService.java,**/CommentService.java,**/ProjectService.java,**/TaskDTO.java,**/UserDTO.java,**/AchievementService.java,**/controller/**,**/Clan.java,**/Comment.java,**/Greeting.java,**/Income.java,**/Project.java,**/Spendings.java,**/User.java,**/XpGains.java,**/Task.java,**/UsersInventory.java
+            -Dsonar.exclusions=**/generated/**,**/target/**,**/configuration/**,**/BestInQuestApplication.java,**/enums/**
             -Dsonar.tests=src/test/java
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml  # Путь к отчету JaCoCo
             -Dsonar.analysis.mode=publish
             -Dsonar.qualitygate.wait=true
             -Dsonar.branch.name=${{ github.ref_name }}
-            -Dsonar.coverage.exclusions=**/config/**,**/target/**,**/configuration/**,**/BestInQuestApplication.java,**/ClanService.java,**/CommentService.java,**/ProjectService.java,**/TaskDTO.java,**/UserDTO.java,**/AchievementService.java,**/controller/**,**/Clan.java,**/Comment.java,**/Greeting.java,**/Income.java,**/Project.java,**/Spendings.java,**/User.java,**/XpGains.java,**/Task.java,**/UsersInventory.java
-
-          # ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
+            -Dsonar.coverage.exclusions=**/config/**,**/target/**,**/configuration/**,**/BestInQuestApplication.java,**/enums/**
 
   test:
     runs-on: ubuntu-latest
