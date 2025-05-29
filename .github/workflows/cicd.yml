@@ -44,6 +44,7 @@ jobs:
             -Dsonar.exclusions=**/generated/**,**/model/**,**/target/**,**/enums/**,**/controller/**,**/configuration/**
             -Dsonar.tests=src/test/java
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml  # Путь к отчету JaCoCo
+            -Dsonar.analysis.mode=publish
             -Dsonar.coverage.exclusions=**/model/**,**/config/**,**/target,**/enums/**,**/controller/**,**/configuration/**
             ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
 
