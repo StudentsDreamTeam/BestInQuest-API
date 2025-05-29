@@ -33,7 +33,7 @@ public class AchievementDetector {
             default -> throw new IllegalArgumentException("Unknown achievement type: " + achievement.getType());
         }
 
-        return comparingValue >= achievement.getRequired_value();
+        return comparingValue >= achievement.getRequiredValue();
     }
 
     public List<UserAchievementDTO> detectForUser(User user) {

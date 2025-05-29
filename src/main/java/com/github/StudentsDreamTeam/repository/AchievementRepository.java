@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface AchievementRepository extends JpaRepository<Achievement, Long> {
     @Query(value = """
-        SELECT * FROM achievement a
+        SELECT * FROM achievements a
         WHERE NOT EXISTS (
-            SELECT 1 FROM user_achievement ua
-            WHERE ua.achievement_id = a.id AND ua.user_id = :userId
+            SELECT 1 FROM users_achievements ua
+            WHERE ua.achievement = a.id AND ua.user_id = :userId
         )
         """, nativeQuery = true)
     List<Achievement> findAchievementsNotOwnedByUserNative(@Param("userId") Integer userId);

@@ -1,5 +1,8 @@
 package com.github.StudentsDreamTeam.task;
 
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.github.StudentsDreamTeam.enums.Difficulty;
 import com.github.StudentsDreamTeam.enums.Priority;
 import com.github.StudentsDreamTeam.enums.Status;
@@ -16,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
@@ -99,7 +101,7 @@ class TaskServiceTests {
 
     @BeforeEach
     public void resetMocks() {
-        Mockito.reset(userService, achievementDetector, taskRepository, userRepository, usersInventoryRepository,
+        reset(userService, achievementDetector, taskRepository, userRepository, usersInventoryRepository,
                 xpGainsRepository, incomeRepository, spendingsRepository, taskPointerRepository);
     }
 
@@ -110,17 +112,17 @@ class TaskServiceTests {
         Task expected = createSampleTask(author, author);
         expected.setId(0);
 
-        Mockito.when(userRepository.findById(0L)).thenReturn(Optional.of(author));
-        Mockito.when(taskRepository.save(Mockito.any())).thenReturn(expected);
+        when(userRepository.findById(0L)).thenReturn(Optional.of(author));
+        when(taskRepository.save(any())).thenReturn(expected);
 
         taskService.createTask(0L, 0L, argument);
 
-        Mockito.verify(userRepository, Mockito.times(2)).findById(0L);
-        Mockito.verifyNoMoreInteractions(userRepository);
-        Mockito.verify(taskRepository).save(argument);
-        Mockito.verifyNoMoreInteractions(taskRepository);
-        Mockito.verify(taskPointerRepository).save(Mockito.any());
-        Mockito.verifyNoMoreInteractions(taskPointerRepository);
+        verify(userRepository, times(2)).findById(0L);
+        verifyNoMoreInteractions(userRepository);
+        verify(taskRepository).save(argument);
+        verifyNoMoreInteractions(taskRepository);
+        verify(taskPointerRepository).save(any());
+        verifyNoMoreInteractions(taskPointerRepository);
 
     }
 
@@ -129,19 +131,67 @@ class TaskServiceTests {
         User author = createSampleUser(0);
         Task argument = createSampleTask(null, null);
 
-        Mockito.when(userRepository.findById(0L)).thenReturn(Optional.of(author));
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(0L)).thenReturn(Optional.of(author));
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> taskService.createTask(1L, 1L, argument));
         Assertions.assertThrows(EntityNotFoundException.class, () -> taskService.createTask(1L, 0L, argument));
         Assertions.assertThrows(EntityNotFoundException.class, () -> taskService.createTask(0L, 1L, argument));
 
 
-        Mockito.verify(userRepository, Mockito.atLeast(3)).findById(1L);
-        Mockito.verify(userRepository, Mockito.atMost(4)).findById(1L);
-        Mockito.verifyNoMoreInteractions(userRepository);
-        Mockito.verifyNoInteractions(taskRepository);
-        Mockito.verifyNoInteractions(taskPointerRepository);
+        verify(userRepository, atLeast(3)).findById(1L);
+        verify(userRepository, atMost(4)).findById(1L);
+        verifyNoMoreInteractions(userRepository);
+        verifyNoInteractions(taskRepository);
+        verifyNoInteractions(taskPointerRepository);
+
+    }
+
+    @Test
+    void taskUpdateTest() {
+        User author = createSampleUser(0);
+        User newExecutor = createSampleUser(1);
+
+        Task updated = createSampleTask(author, author);
+        updated.setExecutor(newExecutor);
+        updated.setTitle("Updated");
+        updated.setDuration(fiveMinutes.plusHours(1));
+        updated.setDescription("updated");
+        updated.setRewardXp(0);
+        updated.setRewardCurrency(0);
+        updated.setFastDoneBonus(0);
+        updated.setDifficulty(Difficulty.HARD);
+        updated.setStatus(Status.WAITING_REVIEW);
+
+        Task expected = createSampleTask(author, author);
+        expected.setExecutor(newExecutor);
+        expected.setTitle("Updated");
+        expected.setDuration(fiveMinutes.plusHours(1));
+        expected.setDescription("updated");
+        expected.setRewardXp(0);
+        expected.setRewardCurrency(0);
+        expected.setFastDoneBonus(0);
+        expected.setDifficulty(Difficulty.HARD);
+        expected.setStatus(Status.WAITING_REVIEW);
+        expected.setUpdateDate(now);
+
+
+        Task old = createSampleTask(author, author);
+        old.setUpdateDate(longTimeAgo);
+
+        when(taskRepository.findById(0)).thenReturn(Optional.of(old));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(newExecutor));
+        when(taskRepository.save(any())).thenReturn(expected);
+
+        Task actual = taskService.updateTask(0, 0, updated);
+
+        verify(taskRepository).findById(0);
+
+        verify(userRepository).findById(1L);
+        verifyNoMoreInteractions(userRepository);
+
+        verify(taskRepository).save(any());
+        verifyNoMoreInteractions(taskRepository);
 
     }
 

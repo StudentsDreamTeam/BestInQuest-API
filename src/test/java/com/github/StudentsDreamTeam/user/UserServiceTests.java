@@ -1,5 +1,7 @@
 package com.github.StudentsDreamTeam.user;
 
+import static org.mockito.Mockito.*;
+
 import com.github.StudentsDreamTeam.dto.UpdateUserProfileDTO;
 import com.github.StudentsDreamTeam.model.User;
 import com.github.StudentsDreamTeam.repository.LevelRequirementRepository;
@@ -8,7 +10,6 @@ import com.github.StudentsDreamTeam.service.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -23,8 +24,8 @@ public class UserServiceTests {
     @Test
     @DisplayName("Normal registration")
     public void normalRegistration() {
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        LevelRequirementRepository mockLevelRequirementRepository = Mockito.mock(LevelRequirementRepository.class);
+        UserRepository mockUserRepository = mock(UserRepository.class);
+        LevelRequirementRepository mockLevelRequirementRepository = mock(LevelRequirementRepository.class);
 
         UserService userService = new UserService(mockUserRepository, mockLevelRequirementRepository);
 
@@ -38,14 +39,14 @@ public class UserServiceTests {
         expected.setPassword("some strong password");
         expected.setStreak(0);
 
-        Mockito.when(mockUserRepository.save(expected)).thenReturn(expected);
-        Mockito.when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(false);
+        when(mockUserRepository.save(expected)).thenReturn(expected);
+        when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(false);
 
         User actual = userService.registerUser(expected);
 
-        Mockito.verify(mockUserRepository).save(expected);
-        Mockito.verify(mockUserRepository).existsByEmail(expected.getEmail());
-        Mockito.verifyNoMoreInteractions(mockUserRepository);
+        verify(mockUserRepository).save(expected);
+        verify(mockUserRepository).existsByEmail(expected.getEmail());
+        verifyNoMoreInteractions(mockUserRepository);
 
         Assertions.assertEquals(expected.getName(), actual.getName());
         Assertions.assertEquals(expected.getXp(), actual.getXp());
@@ -61,8 +62,8 @@ public class UserServiceTests {
     @Test
     @DisplayName("Duplicate email deny of registration")
     public void duplicateEmail() {
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        LevelRequirementRepository mockLevelRequirementRepository = Mockito.mock(LevelRequirementRepository.class);
+        UserRepository mockUserRepository = mock(UserRepository.class);
+        LevelRequirementRepository mockLevelRequirementRepository = mock(LevelRequirementRepository.class);
 
         UserService userService = new UserService(mockUserRepository, mockLevelRequirementRepository);
 
@@ -76,20 +77,20 @@ public class UserServiceTests {
         expected.setPassword("some strong password");
         expected.setStreak(0);
 
-        Mockito.when(mockUserRepository.save(expected)).thenReturn(expected);
-        Mockito.when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(true);
+        when(mockUserRepository.save(expected)).thenReturn(expected);
+        when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(true);
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.registerUser(expected));
 
-        Mockito.verify(mockUserRepository).existsByEmail(expected.getEmail());
-        Mockito.verifyNoMoreInteractions(mockUserRepository);
+        verify(mockUserRepository).existsByEmail(expected.getEmail());
+        verifyNoMoreInteractions(mockUserRepository);
     }
 
     @Test
     @DisplayName("Normal flow of changing user profile info")
     public void updateProfileInfo() {
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        LevelRequirementRepository mockLevelRequirementRepository = Mockito.mock(LevelRequirementRepository.class);
+        UserRepository mockUserRepository = mock(UserRepository.class);
+        LevelRequirementRepository mockLevelRequirementRepository = mock(LevelRequirementRepository.class);
 
         UserService userService = new UserService(mockUserRepository, mockLevelRequirementRepository);
 
@@ -113,17 +114,17 @@ public class UserServiceTests {
         expected.setPassword("different password");
         expected.setStreak(0);
 
-        Mockito.when(mockUserRepository.findById(0L)).thenReturn(Optional.of(old));
-        Mockito.when(mockUserRepository.save(expected)).thenReturn(expected);
-        Mockito.when(mockUserRepository.existsByEmail(old.getEmail())).thenReturn(true);
-        Mockito.when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(false);
+        when(mockUserRepository.findById(0L)).thenReturn(Optional.of(old));
+        when(mockUserRepository.save(expected)).thenReturn(expected);
+        when(mockUserRepository.existsByEmail(old.getEmail())).thenReturn(true);
+        when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(false);
 
         User actual = userService.updateUserProfile(0,
                 new UpdateUserProfileDTO("Quixote", "changed@example.org", "different password"));
 
-        Mockito.verify(mockUserRepository).findById(0L);
-        Mockito.verify(mockUserRepository).existsByEmail(expected.getEmail());
-        Mockito.verify(mockUserRepository).save(expected);
+        verify(mockUserRepository).findById(0L);
+        verify(mockUserRepository).existsByEmail(expected.getEmail());
+        verify(mockUserRepository).save(expected);
 
         Assertions.assertEquals(expected.getName(), actual.getName());
         Assertions.assertEquals(expected.getXp(), actual.getXp());
@@ -139,8 +140,8 @@ public class UserServiceTests {
     @Test
     @DisplayName("Setting email that already exists")
     public void invalidUpdateProfileInfo() {
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        LevelRequirementRepository mockLevelRequirementRepository = Mockito.mock(LevelRequirementRepository.class);
+        UserRepository mockUserRepository = mock(UserRepository.class);
+        LevelRequirementRepository mockLevelRequirementRepository = mock(LevelRequirementRepository.class);
 
         UserService userService = new UserService(mockUserRepository, mockLevelRequirementRepository);
 
@@ -164,25 +165,25 @@ public class UserServiceTests {
         expected.setPassword("different password");
         expected.setStreak(0);
 
-        Mockito.when(mockUserRepository.findById(0L)).thenReturn(Optional.of(old));
-        Mockito.when(mockUserRepository.save(expected)).thenReturn(expected);
-        Mockito.when(mockUserRepository.existsByEmail(old.getEmail())).thenReturn(true);
-        Mockito.when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(true);
+        when(mockUserRepository.findById(0L)).thenReturn(Optional.of(old));
+        when(mockUserRepository.save(expected)).thenReturn(expected);
+        when(mockUserRepository.existsByEmail(old.getEmail())).thenReturn(true);
+        when(mockUserRepository.existsByEmail(expected.getEmail())).thenReturn(true);
 
         Assertions.assertThrows(IllegalStateException.class, () -> userService.updateUserProfile(0,
                 new UpdateUserProfileDTO("Quixote", "changed@example.org", "different password")));
 
-        Mockito.verify(mockUserRepository).findById(0L);
-        Mockito.verify(mockUserRepository).existsByEmail(expected.getEmail());
-        Mockito.verifyNoInteractions(mockUserRepository);
+        verify(mockUserRepository).findById(0L);
+        verify(mockUserRepository).existsByEmail(expected.getEmail());
+        verifyNoMoreInteractions(mockUserRepository);
 
     }
 
     @Test
     @DisplayName("Checks if streak updates")
     public void checkStreakUpdate() {
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        LevelRequirementRepository mockLevelRequirementRepository = Mockito.mock(LevelRequirementRepository.class);
+        UserRepository mockUserRepository = mock(UserRepository.class);
+        LevelRequirementRepository mockLevelRequirementRepository = mock(LevelRequirementRepository.class);
 
         UserService userService = new UserService(mockUserRepository, mockLevelRequirementRepository);
 
@@ -205,13 +206,13 @@ public class UserServiceTests {
         expected.setPassword("some strong password");
         expected.setStreak(11);
 
-        Mockito.when(mockUserRepository.findById(0L)).thenReturn(Optional.of(old));
-        Mockito.when(mockUserRepository.save(Mockito.argThat(arg -> Objects.equals(expected.getId(), arg.getId())))).thenReturn(expected);
+        when(mockUserRepository.findById(0L)).thenReturn(Optional.of(old));
+        when(mockUserRepository.save(argThat(arg -> Objects.equals(expected.getId(), arg.getId())))).thenReturn(expected);
 
         User actual = userService.getUserProfile(0L);
 
-        Mockito.verify(mockUserRepository).findById(0L);
-        Mockito.verify(mockUserRepository).save(Mockito.argThat(
+        verify(mockUserRepository).findById(0L);
+        verify(mockUserRepository).save(argThat(
                 argument -> expected.getName().equals(argument.getName()) &&
                                 expected.getXp().equals(argument.getXp()) &&
                                 expected.getLevel().equals(argument.getLevel()) &&

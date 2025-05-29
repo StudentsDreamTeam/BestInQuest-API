@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS items (
     name      varchar(255) NOT NULL UNIQUE CHECK (length(name) > 0),
     description      varchar(255),
     rarity      varchar(255) NOT NULL CHECK (length(rarity) > 0),
-    xp_multiplier     bigint    NOT NULL CHECK (xp_multiplier >= 0),
-    currency_multiplier bigint    NOT NULL,
+    xp_multiplier     float    NOT NULL CHECK (xp_multiplier >= 0),
+    currency_multiplier float    NOT NULL,
     duration  numeric(21,0) NOT NULL,
     cost     bigint    NOT NULL CHECK (cost >= 0)
 );

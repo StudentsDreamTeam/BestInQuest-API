@@ -1,10 +1,8 @@
 package com.github.StudentsDreamTeam.service;
 
 import com.github.StudentsDreamTeam.dto.AchievementDTO;
-import com.github.StudentsDreamTeam.dto.ItemDTO;
 import com.github.StudentsDreamTeam.enums.AchievementType;
 import com.github.StudentsDreamTeam.model.Achievement;
-import com.github.StudentsDreamTeam.model.Item;
 import com.github.StudentsDreamTeam.model.User;
 import com.github.StudentsDreamTeam.model.UserAchievement;
 import com.github.StudentsDreamTeam.repository.AchievementRepository;
@@ -14,9 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -63,7 +58,7 @@ public class AchievementService {
         existing.setName(dto.name());
         existing.setDescription(dto.description());
         existing.setType(AchievementType.fromValue(dto.type()));
-        existing.setRequired_value(dto.requiredXp());
+        existing.setRequiredValue(dto.requiredXp());
         existing.setIcon(dto.icon());
 
         Achievement updated = achievementRepository.save(existing);

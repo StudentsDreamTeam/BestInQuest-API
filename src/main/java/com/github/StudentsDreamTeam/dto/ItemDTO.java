@@ -10,8 +10,8 @@ public record ItemDTO(
         String name,
         String description,
         String rarity,
-        Long xpMultiplier,
-        Long currencyMultiplier,
+        Float xpMultiplier,
+        Float currencyMultiplier,
         Long duration,
         Long cost
 ) {
