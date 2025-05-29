@@ -48,7 +48,6 @@ jobs:
             -Dsonar.qualitygate.wait=true
             -Dsonar.branch.name=${{ github.ref_name }}
             -Dsonar.coverage.exclusions=**/config/**,**/target/**,**/configuration/**,**/BestInQuestApplication.java,**/enums/**
-          # ${{ github.ref_name != 'main' && '-Dsonar.branch.name=' || '' }}${{ github.ref_name }}
 
   test:
     runs-on: ubuntu-latest
