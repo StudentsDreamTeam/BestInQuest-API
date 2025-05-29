@@ -1,13 +1,12 @@
 package com.github.StudentsDreamTeam.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
+import com.github.StudentsDreamTeam.dto.AchievementDTO;
+import com.github.StudentsDreamTeam.enums.AchievementType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Achievements")
@@ -25,9 +24,31 @@ public class Achievement {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "required_xp")
-    private Integer required_xp;
+    @Column(name = "required_value")
+    private Integer requiredValue;
 
     @Column(name = "icon")
     private String icon;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private AchievementType type;
+
+    @OneToMany(mappedBy = "achievement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAchievement> userAchievements;
+
+    public static Achievement fromDTO(AchievementDTO achievementDTO) {
+        Achievement achievement = new Achievement();
+
+        achievement.setName(achievementDTO.name());
+        achievement.setDescription(achievementDTO.description());
+        achievement.setType(
+                achievementDTO.type() != null
+                        ? AchievementType.fromValue(achievementDTO.type())
+                        : AchievementType.XP
+        );
+        achievement.setRequiredValue(achievementDTO.requiredXp());
+        achievement.setIcon(achievementDTO.icon());
+        return achievement;
+    }
 }

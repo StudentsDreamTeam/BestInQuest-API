@@ -1,5 +1,6 @@
 package com.github.StudentsDreamTeam.service;
 
+import com.github.StudentsDreamTeam.dto.UpdateUserProfileDTO;
 import com.github.StudentsDreamTeam.model.LevelRequirement;
 import com.github.StudentsDreamTeam.model.User;
 import com.github.StudentsDreamTeam.repository.LevelRequirementRepository;
@@ -20,6 +21,24 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final LevelRequirementRepository levelRequirementRepository;
+
+    @Transactional
+    public User updateUserProfile(Integer userId, UpdateUserProfileDTO dto) {
+        User user = userRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (dto.name() != null) user.setName(dto.name());
+        if (dto.email() != null && !dto.email().equalsIgnoreCase(user.getEmail())) {
+            boolean emailTaken = userRepository.existsByEmail(dto.email());
+            if (emailTaken) {
+                throw new IllegalStateException("Email is already in use: " + dto.email());
+            }
+            user.setEmail(dto.email());
+        }
+        if (dto.password() != null) user.setPassword(dto.password());
+
+        return userRepository.save(user);
+    }
 
     public void updateUserLevel(User user) {
         List<LevelRequirement> matchedLevels = levelRequirementRepository.findAllByXp(user.getXp());
@@ -76,5 +95,4 @@ public class UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
-
 }

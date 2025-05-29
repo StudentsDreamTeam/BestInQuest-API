@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS items (
     name      varchar(255) NOT NULL UNIQUE CHECK (length(name) > 0),
     description      varchar(255),
     rarity      varchar(255) NOT NULL CHECK (length(rarity) > 0),
-    xp_multiplier     bigint    NOT NULL CHECK (xp_multiplier >= 0),
-    currency_multiplier bigint    NOT NULL,
+    xp_multiplier     float    NOT NULL CHECK (xp_multiplier >= 0),
+    currency_multiplier float    NOT NULL,
     duration  numeric(21,0) NOT NULL,
     cost     bigint    NOT NULL CHECK (cost >= 0)
 );
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS tasks_pointers (
     id             serial    PRIMARY KEY,
 --    task         bigint,
     project         bigint,
-    creation_date  timestamptz NOT NULL,
+    creation_date  timestamptz,
     linked_task_id integer,
     UNIQUE (linked_task_id, project)
 );
@@ -151,8 +151,9 @@ CREATE TABLE IF NOT EXISTS achievements (
     id            serial    PRIMARY KEY,
     name      varchar(255) NOT NULL UNIQUE CHECK (length(name) > 0),
     description      varchar(255) NOT NULL CHECK (length(description) > 0),
-    required_xp  bigint    NOT NULL CHECK (required_xp >= 0),
-    icon        varchar(255) NOT NULL CHECK (length(icon) > 0)
+    required_value  bigint    NOT NULL CHECK (required_value >= 0),
+    icon        varchar(255),
+    type        varchar(255) NOT NULL CHECK (length(type) > 0)
 );
 
 CREATE TABLE IF NOT EXISTS users_achievements (
